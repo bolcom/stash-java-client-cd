@@ -1,8 +1,7 @@
 package com.bol.cd.stash.client;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import static com.bol.cd.stash.client.JsonUtil.getJsonFromResources;
+
 import java.util.Optional;
 
 import mockit.Expectations;
@@ -17,7 +16,6 @@ import com.atlassian.stash.rest.client.core.http.HttpExecutor;
 import com.atlassian.stash.rest.client.core.http.HttpRequest;
 import com.atlassian.stash.rest.client.core.http.HttpResponseProcessor;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 public class BranchStashClientImplTest {
 
@@ -29,11 +27,8 @@ public class BranchStashClientImplTest {
 
     private ExtendedStashClient extendedStashClient;
 
-    private JsonParser jsonParser;
-
     @Before
     public void before() {
-        jsonParser = new JsonParser();
         extendedStashClient = new ExtendedStashClientImpl(httpExecutor);
     }
 
@@ -41,12 +36,9 @@ public class BranchStashClientImplTest {
     @Test
     public void testGetRepositoryBranch() {
 
-        
-        
         new Expectations() {
-        
             {
-                JsonElement jsonElement = getJsonTestObject("/com/bol/cd/stash/client/branches.json");
+                JsonElement jsonElement = getJsonFromResources("/com/bol/cd/stash/client/branches.json");
                 // @formatter:off
                 httpExecutor.execute((HttpRequest) any, (HttpResponseProcessor<JsonElement>) any); result = jsonElement;
                 // @formatter:on
@@ -55,21 +47,6 @@ public class BranchStashClientImplTest {
         Optional<Branch> branch = extendedStashClient.getBranchStashClient().getRepositoryBranch(projectKey, repositorySlug, "ABC-123");
         Assert.assertTrue(branch.isPresent());
         Assert.assertEquals("ABC-123", branch.get().getDisplayId());
-
     }
 
-    private JsonElement getJsonTestObject(String name) {
-
-        
-        
-        JsonElement result = null;
-        try (InputStream is = this.getClass().getResourceAsStream(name); InputStreamReader isr = new InputStreamReader(is);) {
-
-            result = jsonParser.parse(isr);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
-
-    }
 }
