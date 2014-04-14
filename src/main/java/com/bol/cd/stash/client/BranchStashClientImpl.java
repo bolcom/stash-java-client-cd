@@ -1,20 +1,13 @@
 package com.bol.cd.stash.client;
 
-import static com.atlassian.stash.rest.client.core.http.HttpMethod.GET;
 import static com.atlassian.stash.rest.client.core.http.HttpMethod.POST;
 import static com.atlassian.stash.rest.client.core.parser.Parsers.branchParser;
-import static com.atlassian.stash.rest.client.core.parser.Parsers.pageParser;
-import static com.bol.cd.stash.parser.ExtendedParsers.pullRequestParser;
 
 import java.util.Optional;
 
 import com.atlassian.stash.rest.client.api.entity.Branch;
 import com.atlassian.stash.rest.client.api.entity.Page;
-import com.atlassian.stash.rest.client.api.entity.Repository;
-import com.bol.cd.stash.api.PullRequest;
 import com.bol.cd.stash.entity.BranchRequest;
-import com.bol.cd.stash.entity.PullRequestRequest;
-import com.bol.cd.stash.entity.PullRequestRequest.Ref;
 import com.google.gson.JsonElement;
 
 public class BranchStashClientImpl {
@@ -42,9 +35,6 @@ public class BranchStashClientImpl {
 
     public Optional<Branch> getRepositoryBranch(String projectKey, String repositorySlug, String displayId) {
         Page<Branch> branchesPage = extendedStashClient.getRepositoryBranches(projectKey, repositorySlug, null, 0, 100);
-        for (Branch branch : branchesPage.getValues()) {
-            System.out.println(branch.getDisplayId());
-        }
         return branchesPage.getValues().stream().filter(b -> b.getDisplayId().equals(displayId)).findFirst();
     }
 

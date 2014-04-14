@@ -28,7 +28,10 @@ dependencies {
     compile "com.atlassian.stash:stash-java-client-core:${stashJavaClient}"
     compile "com.atlassian.stash:stash-java-client-httpclient:${stashJavaClient}"
     compile 'com.google.code.gson:gson:2.2.4'
-    testCompile group: 'junit', name: 'junit', version: '4.+'
+    
+    testCompile 'com.googlecode.jmockit:jmockit:1.7'
+    testCompile 'junit:junit:4.+'
+    
 }
 
 
