@@ -29,7 +29,9 @@ dependencies {
     compile "com.atlassian.stash:stash-java-client-httpclient:${stashJavaClient}"
     compile 'com.google.code.gson:gson:2.2.4'
     
-    testCompile 'com.googlecode.jmockit:jmockit:1.7'
+    //Not using 1.7, https://code.google.com/p/jmockit/issues/detail?id=343
+    
+    testCompile 'com.googlecode.jmockit:jmockit:1.6'
     testCompile 'junit:junit:4.+'
     
 }
