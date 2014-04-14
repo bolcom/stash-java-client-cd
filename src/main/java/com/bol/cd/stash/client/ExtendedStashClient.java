@@ -8,4 +8,8 @@ import com.google.gson.JsonObject;
 
 public interface ExtendedStashClient extends StashClient {
     public JsonElement doRestCall(String requestUrl, HttpMethod methodType, JsonObject requestJson, boolean anonymousCall) throws StashException;
+
+    public BranchStashClientImpl getBranchStashClient();
+
+    public PullRequestStashClientImpl getPullRequestStashClient();
 }

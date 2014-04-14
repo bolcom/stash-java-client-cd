@@ -5,8 +5,9 @@ apply plugin: 'maven'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = 'com.bol'
-version = '0.1'
+group = 'com.bol.continuousdelivery'
+baseName = 'stash-java-client'
+version = '0.1-SNAPSHOT'
 ext.stashJavaClient = '1.3.6'
 
 jar {
@@ -22,6 +23,7 @@ repositories {
 }
 
 dependencies {
+    //https://maven.atlassian.com/content/groups/public/com/atlassian/stash/
     compile "com.atlassian.stash:stash-java-client-api:${stashJavaClient}"
     compile "com.atlassian.stash:stash-java-client-core:${stashJavaClient}"
     compile "com.atlassian.stash:stash-java-client-httpclient:${stashJavaClient}"
