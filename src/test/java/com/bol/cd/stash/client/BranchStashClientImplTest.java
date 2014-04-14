@@ -26,10 +26,12 @@ public class BranchStashClientImplTest {
     private HttpExecutor httpExecutor;
 
     private ExtendedStashClient extendedStashClient;
+    private BranchStashClientImpl branchStashClient;
 
     @Before
     public void before() {
         extendedStashClient = new ExtendedStashClientImpl(httpExecutor);
+        branchStashClient = extendedStashClient.getBranchStashClient();
     }
 
     @SuppressWarnings("unchecked")
@@ -44,7 +46,7 @@ public class BranchStashClientImplTest {
                 // @formatter:on
             }
         };
-        Optional<Branch> branch = extendedStashClient.getBranchStashClient().getRepositoryBranch(projectKey, repositorySlug, "ABC-123");
+        Optional<Branch> branch = branchStashClient.getRepositoryBranch(projectKey, repositorySlug, "ABC-123");
         Assert.assertTrue(branch.isPresent());
         Assert.assertEquals("ABC-123", branch.get().getDisplayId());
     }
