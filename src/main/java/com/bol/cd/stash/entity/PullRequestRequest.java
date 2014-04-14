@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
  * <pre>
  * {
  *     "title": "Talking Nerdy",
- *     "description": "It’s a kludge, but put the tuple from the database in the cache.",
+ *     "description": "Its a kludge, but put the tuple from the database in the cache.",
  *     "state": "OPEN",
  *     "open": true,
  *     "closed": false,
