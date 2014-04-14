@@ -3,3 +3,6 @@
 .project
 .settings/org.eclipse.jdt.core.prefs
 build/
+.idea
+*.iml
+classes/
