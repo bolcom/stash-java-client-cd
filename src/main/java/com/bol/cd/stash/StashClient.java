@@ -1,6 +1,6 @@
 package com.bol.cd.stash;
 
-import com.bol.cd.stash.model.JsonApplicationMediaTypeInterceptor;
+import com.bol.cd.stash.internal.JsonApplicationMediaTypeInterceptor;
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.auth.BasicAuthRequestInterceptor;

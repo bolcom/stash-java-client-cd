@@ -7,8 +7,6 @@ package com.bol.cd.stash.request;
  *     "dryRun": false
  * }
  * </pre>
- * 
- * @author ckramer
  */
 public class DeleteBranch {
 

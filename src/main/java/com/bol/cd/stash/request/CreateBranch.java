@@ -7,8 +7,6 @@ package com.bol.cd.stash.request;
  *     "startPoint": "refs/heads/master"
  * }
  * </pre>
- * 
- * @author ckramer
  */
 public class CreateBranch {
 
