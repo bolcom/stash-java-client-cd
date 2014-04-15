@@ -1,16 +1,11 @@
 package com.bol.cd.stash;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-
 import com.bol.cd.stash.model.Branch;
 import com.bol.cd.stash.model.Page;
-import com.bol.cd.stash.request.CreateBranch;
-import com.bol.cd.stash.request.DeleteBranch;
+import com.bol.cd.stash.model.PullRequest;
+import com.bol.cd.stash.request.*;
+
+import javax.ws.rs.*;
 
 /**
  * https://developer.atlassian.com/static/rest/stash/2.12.1/stash-branch-utils-rest.html
@@ -27,7 +22,7 @@ public interface StashApi {
             @PathParam("repositorySlug") String repositorySlug,
             @QueryParam("limit") int limit,
             @QueryParam("start") int start
-            );
+    );
 
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches")
@@ -40,14 +35,14 @@ public interface StashApi {
             @QueryParam("orderBy") String orderBy,
             @QueryParam("limit") int limit,
             @QueryParam("start") int start
-            );
+    );
 
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/branches/default")
     public Branch getRepositoryDefaultBranch(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug
-            );
+    );
 
     @POST
     @Path("/rest/branch-utils/1.0/projects/{projectKey}/repos/{repositorySlug}/branches")
@@ -55,7 +50,7 @@ public interface StashApi {
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             CreateBranch createBranch
-            );
+    );
 
     @DELETE
     @Path("/rest/branch-utils/1.0/projects/{projectKey}/repos/{repositorySlug}/branches")
@@ -63,7 +58,25 @@ public interface StashApi {
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             DeleteBranch deleteBranch
-            );
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests")
+    public Page<PullRequest> getPullRequests(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests")
+    public Page<PullRequest> getPullRequests(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("direction") PullRequestDirection direction,
+            @QueryParam("at") String atBranch,
+            @QueryParam("state") PullRequestState state,
+            @QueryParam("order") PullRequestSortOrder order
+    );
 
 }
 //@formatter:on
