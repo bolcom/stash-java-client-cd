@@ -11,19 +11,26 @@ import java.util.Arrays;
 
 public class StashClient {
 
+    private static String projectKey = "TPT";
+    private static String repositorySlug = "testrepository";
+    
     public static StashApi createClient() {
         return Feign.builder()
                 .contract(new JAXRSModule.JAXRSContract())
                 .decoder(new JacksonDecoder())
                 .encoder(new JacksonEncoder())
                 .requestInterceptors(getRequestInterceptors())
-                .target(StashApi.class, "http://192.168.56.101:7990");
+                .target(StashApi.class, "http://localhost:7990");
     }
 
     private static Iterable<RequestInterceptor> getRequestInterceptors() {
         return Arrays.asList(
-                new BasicAuthRequestInterceptor("test", "test123"),
+                new BasicAuthRequestInterceptor("admin", "password"),
                 new JsonApplicationMediaTypeInterceptor()
         );
+    }
+    
+    public static void main(String[] args) {
+        createClient().getRepositoryDefaultBranch(projectKey, repositorySlug);
     }
 }

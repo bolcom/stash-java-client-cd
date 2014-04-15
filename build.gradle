@@ -7,10 +7,12 @@ targetCompatibility = 1.8
 
 group = 'com.bol.continuousdelivery'
 version = '0.1-SNAPSHOT'
+ext.slf4jVersion = '1.7.6'
 
 ext {
     libraries = [:]
     versions = [:]
+    
 }
 
 versions += [
@@ -45,6 +47,8 @@ dependencies {
     //Not using 1.7, https://code.google.com/p/jmockit/issues/detail?id=343
     testCompile 'com.googlecode.jmockit:jmockit:1.6'
     testCompile 'junit:junit:4.+'
+    
+    compile "org.slf4j:log4j-over-slf4j:$slf4jVersion", "org.slf4j:jcl-over-slf4j:$slf4jVersion"
 }
 
 
