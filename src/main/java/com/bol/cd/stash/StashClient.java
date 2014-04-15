@@ -14,8 +14,6 @@ import com.bol.cd.stash.request.DeleteBranch;
 
 public class StashClient {
 
-    private static String projectKey = "TPT";
-    private static String repositorySlug = "testrepository";
 
     public static StashApi createClient() {
         return Feign.builder().contract(new JAXRSModule.JAXRSContract()).decoder(new JacksonDecoder()).encoder(new JacksonEncoder())
