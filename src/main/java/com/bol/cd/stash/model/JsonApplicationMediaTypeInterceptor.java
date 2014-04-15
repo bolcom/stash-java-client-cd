@@ -1,4 +1,4 @@
-package com.bol.cd.stash;
+package com.bol.cd.stash.model;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

@@ -1,11 +1,11 @@
-package com.bol.cd.stash;
+package com.bol.cd.stash.model;
 
 public class Branch {
 
     private String id;
     private String displayId;
     private String latestChangeset;
-    //private boolean isDefault;
+    private boolean isDefault;
 
     public String getId() {
         return id;
@@ -31,12 +31,12 @@ public class Branch {
         this.latestChangeset = latestChangeset;
     }
 
-//    public boolean isDefault() {
-//        return isDefault;
-//    }
-//
-//    public void setDefault(boolean isDefault) {
-//        this.isDefault = isDefault;
-//    }
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
 
 }

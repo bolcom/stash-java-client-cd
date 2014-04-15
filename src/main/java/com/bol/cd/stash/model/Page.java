@@ -1,4 +1,4 @@
-package com.bol.cd.stash;
+package com.bol.cd.stash.model;
 
 import java.util.List;
 

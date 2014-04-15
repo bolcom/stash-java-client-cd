@@ -9,6 +9,8 @@ import feign.jaxrs.JAXRSModule;
 
 import java.util.Arrays;
 
+import com.bol.cd.stash.model.JsonApplicationMediaTypeInterceptor;
+
 public class StashClient {
 
     private static String projectKey = "TPT";
@@ -31,6 +33,6 @@ public class StashClient {
     }
     
     public static void main(String[] args) {
-        createClient().getRepositoryDefaultBranch(projectKey, repositorySlug);
+        System.out.println(createClient().getRepositoryBranches(projectKey, repositorySlug));
     }
 }
