@@ -35,10 +35,10 @@ public class BranchStashClientImplTest {
 
     @Before
     public void before() throws MalformedURLException {
-        // HttpClientConfig httpClientConfig = new HttpClientConfig(new URL("http://localhost:7990/"), "admin", "password");
-        // HttpClientHttpExecutor httpClientHttpExecutor = new HttpClientHttpExecutor(httpClientConfig);
-        // extendedStashClient = new ExtendedStashClientImpl(httpClientHttpExecutor);
-        extendedStashClient = new ExtendedStashClientImpl(httpExecutor);
+        HttpClientConfig httpClientConfig = new HttpClientConfig(new URL("http://localhost:7990/"), "admin", "password");
+        HttpClientHttpExecutor httpClientHttpExecutor = new HttpClientHttpExecutor(httpClientConfig);
+        extendedStashClient = new ExtendedStashClientImpl(httpClientHttpExecutor);
+        //extendedStashClient = new ExtendedStashClientImpl(httpExecutor);
         branchStashClient = extendedStashClient.getBranchStashClient();
     }
 
@@ -85,6 +85,11 @@ public class BranchStashClientImplTest {
         };
         Branch branch = branchStashClient.createBranchFromDefaultBranch(projectKey, repositorySlug, "feature/ABC-999");
         Assert.assertEquals("feature/ABC-999", branch.getDisplayId());
+    }
+
+    @Test
+    public void testDeleteBranch() {
+        branchStashClient.deleteBranch(projectKey, repositorySlug, "feature/ABC-999");
     }
 
 }

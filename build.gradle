@@ -11,7 +11,7 @@ ext.stashJavaClient = '1.3.6'
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Stash Java Client Continuous Deliver', 'Implementation-Version': version
+        attributes 'Implementation-Title': 'Stash Java Client Continuous Delivery', 'Implementation-Version': version
     }
 }
 
@@ -22,10 +22,7 @@ repositories {
 
 dependencies {
     //https://maven.atlassian.com/content/groups/public/com/atlassian/stash/
-    compile "com.atlassian.stash:stash-java-client-api:${stashJavaClient}"
-    compile "com.atlassian.stash:stash-java-client-core:${stashJavaClient}"
-    compile "com.atlassian.stash:stash-java-client-httpclient:${stashJavaClient}"
-    compile 'com.google.code.gson:gson:2.2.4'
+    // compile 'com.google.code.gson:gson:2.2.4'
 
     //Not using 1.7, https://code.google.com/p/jmockit/issues/detail?id=343
     testCompile 'com.googlecode.jmockit:jmockit:1.6'

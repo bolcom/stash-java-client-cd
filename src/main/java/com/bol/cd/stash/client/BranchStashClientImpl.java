@@ -1,6 +1,6 @@
 package com.bol.cd.stash.client;
 
-import static com.atlassian.stash.rest.client.core.http.HttpMethod.POST;
+import static com.atlassian.stash.rest.client.core.http.HttpMethod.*;
 import static com.atlassian.stash.rest.client.core.parser.Parsers.branchParser;
 
 import java.util.Optional;
@@ -13,7 +13,13 @@ import com.atlassian.stash.rest.client.api.entity.Page;
 import com.atlassian.stash.rest.client.core.StashClientImpl;
 import com.bol.cd.stash.entity.BranchRequest;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
+/**
+ * See https://developer.atlassian.com/static/rest/stash/2.12.1/stash-branch-utils-rest.html
+ * 
+ * @author ckramer
+ */
 public class BranchStashClientImpl {
 
     private static final Logger log = Logger.getLogger(BranchStashClientImpl.class);
@@ -55,7 +61,7 @@ public class BranchStashClientImpl {
      * @return
      */
     public Branch createBranchFromBranch(String projectKey, String repositorySlug, String name, String startPoint) {
-        String requestUrl = String.format("/rest/branch-utils/1.0/projects/%s/repos/%s/branches", projectKey, repositorySlug);
+        String requestUrl = getBranchesBaseUrl(projectKey, repositorySlug);
         BranchRequest branchRequest = new BranchRequest(name, startPoint);
         JsonElement jsonElement = extendedStashClient.doRestCall(requestUrl, POST, branchRequest.toJson(), false);
         return branchParser().apply(jsonElement);
@@ -68,12 +74,31 @@ public class BranchStashClientImpl {
      * @return
      */
     public Optional<Branch> getRepositoryBranchBId(String projectKey, String repositorySlug, String id) {
-        log.info("Finding repositoryBranch with displayId: " + id);
+        log.info("Finding repositoryBranch with id: " + id);
         Page<Branch> branchesPage = extendedStashClient.getRepositoryBranches(projectKey, repositorySlug, id, 0, 100);
         if (!branchesPage.isLastPage()) {
             throw new IllegalStateException("Too many results returned for displayId '" + id + "'.");
         }
         return branchesPage.getValues().stream().filter(b -> b.getId().equals(id)).findFirst();
+    }
+
+    /**
+     * /rest/branch-utils/1.0/projects/{projectKey}/repos/{repositorySlug}/branches
+     * 
+     * @param projectKey
+     * @param repositorySlug
+     * @param name
+     */
+    public void deleteBranch(String projectKey, String repositorySlug, String name) {
+//        String requestUrl = getBranchesBaseUrl(projectKey, repositorySlug);
+//        JsonObject payLoad = new JsonObject();
+//        payLoad.addProperty("name", name);
+//        payLoad.addProperty("dryRun", false);
+//        extendedStashClient.doRestCall(requestUrl, DELETE, payLoad, false);
+    }
+
+    public String getBranchesBaseUrl(String projectKey, String repositorySlug) {
+        return String.format("/rest/branch-utils/1.0/projects/%s/repos/%s/branches", projectKey, repositorySlug);
     }
 
 }
