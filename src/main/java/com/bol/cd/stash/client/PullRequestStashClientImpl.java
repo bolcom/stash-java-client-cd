@@ -63,7 +63,7 @@ public class PullRequestStashClientImpl {
         Repository repository = extendedStashClient.getRepository(projectKey, repositorySlug);
 
         Branch defaultBranch = extendedStashClient.getRepositoryDefaultBranch(projectKey, repositorySlug);
-        Optional<Branch> optionalBranch = extendedStashClient.getBranchStashClient().getRepositoryBranch(projectKey, repositorySlug, name);
+        Optional<Branch> optionalBranch = extendedStashClient.getBranchStashClient().getRepositoryBranchBId(projectKey, repositorySlug, name);
         if (!optionalBranch.isPresent()) {
             throw new IllegalStateException("No branch for branch with name '" + name + "'. ");
         }
