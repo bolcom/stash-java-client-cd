@@ -34,6 +34,13 @@ public interface StashApi {
     @Path("/rest/api/1.0/projects")
     public Project createProject(Project project);
 
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}")
+    public Repository getRepository(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug
+            );
+
 
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos")

@@ -145,7 +145,7 @@ public class StashClientIntegrationTest {
         log.info("Fetching the defaultBranch...");
         final Branch defaultBranch = stashApi.getRepositoryDefaultBranch(projectKey, testRepository.getSlug());
 
-        log.info("Creating a new branch from the defaultbranch");
+        log.info("Creating a new branch from the defaultbranch...");
         final CreateBranch createBranch = new CreateBranch();
         createBranch.setName(branchName);
         createBranch.setStartPoint(defaultBranch.getId());
