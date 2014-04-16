@@ -6,10 +6,11 @@ import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,21 @@ import com.bol.cd.stash.request.CreateBranch;
 import com.bol.cd.stash.request.DeleteBranch;
 import com.bol.cd.stash.request.PullRequestState;
 
+
+/**
+ * You can enable this class to do an integration test on your Stash installation. It will do various actions like creating projects, repositories and branches and pushing files to them. <br/>
+ * These tests assume that:
+ * <ul>
+ * <li> you have Stash running on localhost, port 7990</li>
+ * <li> the administrative user has userName 'admin' and password 'password'
+ * <li> you have GIT available on your path </li>
+ * <li> you don't care about the project with projectKey 'TPT'.
+ *
+ * </ul>
+ *
+ * @author ckramer
+ *
+ */
 @Ignore
 public class StashClientIntegrationTest {
 
@@ -86,48 +102,51 @@ public class StashClientIntegrationTest {
     @Test
     public void testRepositoryIntegration() throws IOException, InterruptedException {
 
-        // Create Project
+        log.info("Creating project...");
         final Project project = new Project();
         project.setKey(projectKey);
         project.setDescription("Test Project Description");
         project.setName("Test Project");
         stashApi.createProject(project);
 
-        // Create Repository
+        log.info("Creating Repository...");
+
         Repository testRepository = new Repository();
         testRepository.setName("TestRepository");
         testRepository.setProject(project);
         testRepository = stashApi.createRepository(projectKey, testRepository);
 
         // http://admin:password@localhost:7990/scm/tpt/testrepository.git
+        log.info("Generating repositoryUrl...");
         final String placeholderUrl = "%s%s:%s@%s/scm/%s/%s.git";
         final String repositoryUrl = String.format(placeholderUrl, gitProtocol, userName, password, url, projectKey.toLowerCase(), testRepository.getSlug());
 
         // Prep target folder
+        log.info("Preparing build folder...");
         final File gitTestDir = new File("./build/tmp/git");
         gitTestDir.mkdirs();
         final File repositoryDir = new File(gitTestDir, testRepository.getSlug());
         FileUtils.deleteDirectory(repositoryDir);
 
-        // Perform clone
+        log.info("Performing git clone...");
         Assert.assertEquals(0, new ProcessBuilder("git", "clone", repositoryUrl, testRepository.getSlug()).directory(gitTestDir).start().waitFor());
 
-        // Create file
+        log.info("Creating a file...");
         Assert.assertNotNull(Files.createFile(new File(repositoryDir, "firstFile.txt").toPath()));
 
-        // Add file(s)
+        log.info("Adding all files to git...");
         Assert.assertEquals(0, new ProcessBuilder("git", "add", "--all").directory(repositoryDir).start().waitFor());
 
-        // Commit
+        log.info("Committing changes...");
         Assert.assertEquals(0, new ProcessBuilder("git", "commit", "-m", "Adding new file").directory(repositoryDir).start().waitFor());
 
-        // Push
+        log.info("Pushing commits to repository...");
         Assert.assertEquals(0, new ProcessBuilder("git", "push", "origin", "master").directory(repositoryDir).start().waitFor());
 
-        // Get default branch
+        log.info("Fetching the defaultBranch...");
         final Branch defaultBranch = stashApi.getRepositoryDefaultBranch(projectKey, testRepository.getSlug());
 
-        // Create new Branch from default branch
+        log.info("Creating a new branch from the defaultbranch");
         final CreateBranch createBranch = new CreateBranch();
         createBranch.setName(branchName);
         createBranch.setStartPoint(defaultBranch.getId());
@@ -135,7 +154,7 @@ public class StashClientIntegrationTest {
         Assert.assertNotNull(createdBranch);
         Assert.assertEquals(featureBranchId, createdBranch.getId());
 
-        // Validate the branch exists
+        log.info("Validating if the branch exists...");
         final Page<Branch> branchPage = stashApi.getRepositoryBranches(projectKey, testRepository.getSlug());
 
         Branch foundBranch = null;
@@ -148,25 +167,25 @@ public class StashClientIntegrationTest {
         Assert.assertNotNull(foundBranch);
         Assert.assertEquals(featureBranchId, foundBranch.getId());
 
-        // Fetch latest changes
+        log.info("Fetch the latest changes locally, including remotely created branch...");
         Assert.assertEquals(0, new ProcessBuilder("git", "fetch").directory(repositoryDir).start().waitFor());
 
-        // Checkout branch
+        log.info("Checking out newly fetched branch...");
         Assert.assertEquals(0, new ProcessBuilder("git", "checkout", branchName).directory(repositoryDir).start().waitFor());
 
-        // Create file
+        log.info("Creating another file...");
         Assert.assertNotNull(Files.createFile(new File(repositoryDir, "secondFile.txt").toPath()));
 
-        // Add file
+        log.info("Adding all changed files to git...");
         Assert.assertEquals(0, new ProcessBuilder("git", "add", "--all").directory(repositoryDir).start().waitFor());
 
-        // Commit
+        log.info("Committing changes...");
         Assert.assertEquals(0, new ProcessBuilder("git", "commit", "-m", "Adding new file").directory(repositoryDir).start().waitFor());
 
-        // Push
+        log.info("Committing changes to featurebranch...");
         Assert.assertEquals(0, new ProcessBuilder("git", "push").directory(repositoryDir).start().waitFor());
 
-        // Create pullrequest
+        log.info("Creating a new pullRequest");
         PullRequest pullRequest = new PullRequest();
         pullRequest.setTitle("Integration test pullrequest title");
         pullRequest.setDescription("Integration test pull request description");
@@ -193,10 +212,13 @@ public class StashClientIntegrationTest {
         pullRequest.setReviewers(reviewers);
         pullRequest = stashApi.createPullRequest(projectKey, testRepository.getSlug(), pullRequest);
 
-        // Test if it's mergable
-        pullRequest = stashApi.testPullRequestMergable(placeholderUrl, testRepository.getSlug(), pullRequest.getId());
+        log.info("Testing if pullRequest is mergable for pullRequest with id '{}' and version '{}'.", pullRequest.getId(), pullRequest.getVersion());
+        final PullRequest mergeablePullRequest = stashApi.testPullRequestMergable(projectKey, testRepository.getSlug(), pullRequest.getId());
+        Assert.assertTrue(mergeablePullRequest.isCanMerge());
 
-        Assert.assertTrue(pullRequest.isCanMerge());
+        log.info("Merging pullRequest with id '{}' and version '{}'.", pullRequest.getId(), pullRequest.getVersion());
+        pullRequest = stashApi.mergePullRequest(projectKey, testRepository.getSlug(), pullRequest.getId(), pullRequest.getVersion());
+        Assert.assertEquals(PullRequestState.MERGED, pullRequest.getState());
     }
 
 }

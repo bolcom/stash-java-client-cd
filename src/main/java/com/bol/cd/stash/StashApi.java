@@ -161,7 +161,8 @@ public interface StashApi {
     public PullRequest mergePullRequest(
             @PathParam("projectKey") final String projectKey,
             @PathParam("repositorySlug") final String repositorySlug,
-            @PathParam("pullRequestId") final String pullRequestId
+            @PathParam("pullRequestId") final String pullRequestId,
+            @QueryParam("version") int version
             );
 
     @POST
