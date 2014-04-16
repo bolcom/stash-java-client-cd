@@ -11,7 +11,7 @@ public class Branch {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -19,7 +19,7 @@ public class Branch {
         return displayId;
     }
 
-    public void setDisplayId(String displayId) {
+    public void setDisplayId(final String displayId) {
         this.displayId = displayId;
     }
 
@@ -27,7 +27,7 @@ public class Branch {
         return latestChangeset;
     }
 
-    public void setLatestChangeset(String latestChangeset) {
+    public void setLatestChangeset(final String latestChangeset) {
         this.latestChangeset = latestChangeset;
     }
 
@@ -35,7 +35,7 @@ public class Branch {
         return isDefault;
     }
 
-    public void setDefault(boolean isDefault) {
+    public void setDefault(final boolean isDefault) {
         this.isDefault = isDefault;
     }
 

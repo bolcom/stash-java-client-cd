@@ -1,9 +1,9 @@
 package com.bol.cd.stash.model;
 
 
-import com.bol.cd.stash.request.PullRequestState;
-
 import java.util.Set;
+
+import com.bol.cd.stash.request.PullRequestState;
 
 public class PullRequest {
     private String id;
@@ -13,6 +13,8 @@ public class PullRequest {
     private PullRequestState state;
     private boolean open;
     private boolean closed;
+    private boolean canMerge;
+    private boolean conflicted;
     private long createdDate;
     private long updatedDate;
     private Ref fromRef;
@@ -25,7 +27,7 @@ public class PullRequest {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -33,7 +35,7 @@ public class PullRequest {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(final int version) {
         this.version = version;
     }
 
@@ -41,7 +43,7 @@ public class PullRequest {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -49,7 +51,7 @@ public class PullRequest {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -57,7 +59,7 @@ public class PullRequest {
         return state;
     }
 
-    public void setState(PullRequestState state) {
+    public void setState(final PullRequestState state) {
         this.state = state;
     }
 
@@ -65,7 +67,7 @@ public class PullRequest {
         return open;
     }
 
-    public void setOpen(boolean open) {
+    public void setOpen(final boolean open) {
         this.open = open;
     }
 
@@ -73,7 +75,7 @@ public class PullRequest {
         return closed;
     }
 
-    public void setClosed(boolean closed) {
+    public void setClosed(final boolean closed) {
         this.closed = closed;
     }
 
@@ -81,7 +83,7 @@ public class PullRequest {
         return createdDate;
     }
 
-    public void setCreatedDate(long createdDate) {
+    public void setCreatedDate(final long createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -89,7 +91,7 @@ public class PullRequest {
         return updatedDate;
     }
 
-    public void setUpdatedDate(long updatedDate) {
+    public void setUpdatedDate(final long updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -97,7 +99,7 @@ public class PullRequest {
         return fromRef;
     }
 
-    public void setFromRef(Ref fromRef) {
+    public void setFromRef(final Ref fromRef) {
         this.fromRef = fromRef;
     }
 
@@ -105,7 +107,7 @@ public class PullRequest {
         return toRef;
     }
 
-    public void setToRef(Ref toRef) {
+    public void setToRef(final Ref toRef) {
         this.toRef = toRef;
     }
 
@@ -113,7 +115,7 @@ public class PullRequest {
         return author;
     }
 
-    public void setAuthor(UserRole author) {
+    public void setAuthor(final UserRole author) {
         this.author = author;
     }
 
@@ -121,7 +123,7 @@ public class PullRequest {
         return reviewers;
     }
 
-    public void setReviewers(Set<UserRole> reviewers) {
+    public void setReviewers(final Set<UserRole> reviewers) {
         this.reviewers = reviewers;
     }
 
@@ -129,7 +131,24 @@ public class PullRequest {
         return participants;
     }
 
-    public void setParticipants(Set<UserRole> participants) {
+    public void setParticipants(final Set<UserRole> participants) {
         this.participants = participants;
     }
+
+    public boolean isCanMerge() {
+        return canMerge;
+    }
+
+    public void setCanMerge(final boolean canMerge) {
+        this.canMerge = canMerge;
+    }
+
+    public boolean isConflicted() {
+        return conflicted;
+    }
+
+    public void setConflicted(final boolean conflicted) {
+        this.conflicted = conflicted;
+    }
+
 }
