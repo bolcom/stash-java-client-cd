@@ -6,11 +6,10 @@ import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
