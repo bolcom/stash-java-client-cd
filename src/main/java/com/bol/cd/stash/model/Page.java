@@ -8,13 +8,13 @@ public class Page<T> {
     private int limit;
     private boolean lastPage;
 
-    public List<T> values;
+    private List<T> values;
 
     public int getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(final int size) {
         this.size = size;
     }
 
@@ -22,7 +22,7 @@ public class Page<T> {
         return limit;
     }
 
-    public void setLimit(int limit) {
+    public void setLimit(final int limit) {
         this.limit = limit;
     }
 
@@ -30,7 +30,7 @@ public class Page<T> {
         return lastPage;
     }
 
-    public void setLastPage(boolean lastPage) {
+    public void setLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
     }
 
@@ -38,7 +38,7 @@ public class Page<T> {
         return values;
     }
 
-    public void setValues(List<T> values) {
+    public void setValues(final List<T> values) {
         this.values = values;
     }
 

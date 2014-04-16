@@ -1,6 +1,12 @@
 package com.bol.cd.stash;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
 import com.bol.cd.stash.internal.JsonApplicationMediaTypeInterceptor;
+
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.auth.BasicAuthRequestInterceptor;
@@ -8,32 +14,27 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.jaxrs.JAXRSModule;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
 public class StashClient {
 
     private String username;
     private String password;
     private boolean requiresAuthentication = false;
-    private String url;
+    private final String url;
 
-    public static StashApi create(String url) {
+    public static StashApi create(final String url) {
         return new StashClient(url).createClient();
     }
 
-    public static StashApi create(String url, String username, String password) {
+    public static StashApi create(final String url, final String username, final String password) {
         return new StashClient(url).authenticated(username, password).createClient();
     }
 
-    private StashClient(String url) {
+    private StashClient(final String url) {
         Objects.requireNonNull(url, "url must be provided");
         this.url = url;
     }
 
-    public StashClient authenticated(String username, String password) {
+    public StashClient authenticated(final String username, final String password) {
         Objects.requireNonNull(username, "username must be provided");
         Objects.requireNonNull(password, "password must be provided");
         this.username = username;
@@ -52,9 +53,9 @@ public class StashClient {
     }
 
     private Iterable<RequestInterceptor> getRequestInterceptors() {
-        List<RequestInterceptor> base = new ArrayList<>(Arrays.asList(
+        final List<RequestInterceptor> base = new ArrayList<RequestInterceptor>(Arrays.asList(
                 new JsonApplicationMediaTypeInterceptor()
-        ));
+                ));
         if (requiresAuthentication) {
             base.add(new BasicAuthRequestInterceptor(username, password));
         }

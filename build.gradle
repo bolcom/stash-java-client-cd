@@ -2,8 +2,8 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 group = 'com.bol.continuousdelivery'
 version = '0.1.1-SNAPSHOT'
@@ -30,8 +30,10 @@ libraries.feign = ["com.netflix.feign:feign-core:${versions.feign}",
 ]
 
 libraries.slf4j = [
-        "org.slf4j:log4j-over-slf4j:${versions.slf4j}",
         "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
+		"org.slf4j:slf4j-api:${versions.slf4j}",
+        "org.slf4j:slf4j-log4j12:${versions.slf4j}",
+        "log4j:log4j:1.2.17"
 ]
 
 jar {
@@ -48,6 +50,7 @@ dependencies {
     compile libraries.feign
     compile libraries.slf4j
 
+    testCompile 'commons-io:commons-io:2.4'
     testCompile libraries.junit
     testCompile libraries.jmockit
 }
