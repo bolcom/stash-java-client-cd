@@ -4,17 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bol.cd.stash.model.Branch;
+import com.bol.cd.stash.model.Commit;
+import com.bol.cd.stash.model.LinesPage;
+import com.bol.cd.stash.model.LinesPage.Line;
 import com.bol.cd.stash.model.Page;
 import com.bol.cd.stash.model.Project;
 import com.bol.cd.stash.model.PullRequest;
@@ -41,14 +44,16 @@ import com.bol.cd.stash.request.PullRequestState;
  * @author ckramer
  *
  */
-@Ignore
 public class StashClientIntegrationTest {
 
-    private final static Logger log = LoggerFactory.getLogger(StashClientIntegrationTest.class);
-    private final static String gitProtocol = "http://";
+
     private final static String url = "localhost:7990";
     private final static String userName = "admin";
     private final static String password = "password";
+    
+    private final static Logger log = LoggerFactory.getLogger(StashClientIntegrationTest.class);
+    private final static String gitProtocol = "http://";
+    
     private final static String branchName = "feature/ABC-123";
     private final static String projectKey = "TPT";
     private static final String featureBranchId = "refs/heads/feature/ABC-123";
@@ -96,6 +101,7 @@ public class StashClientIntegrationTest {
                 break;
             }
         }
+
     }
 
     @Test
@@ -114,25 +120,29 @@ public class StashClientIntegrationTest {
         testRepository.setName("TestRepository");
         testRepository.setProject(project);
         testRepository = stashApi.createRepository(projectKey, testRepository);
+        String repositorySlug = testRepository.getSlug();
 
+        log.info("RepositorySlug is set to: '{}'.", repositorySlug);
+        
         // http://admin:password@localhost:7990/scm/tpt/testrepository.git
         log.info("Generating repositoryUrl...");
         final String placeholderUrl = "%s%s:%s@%s/scm/%s/%s.git";
-        final String repositoryUrl = String.format(placeholderUrl, gitProtocol, userName, password, url, projectKey.toLowerCase(), testRepository.getSlug());
+        final String repositoryUrl = String.format(placeholderUrl, gitProtocol, userName, password, url, projectKey.toLowerCase(), repositorySlug);
 
         // Prep target folder
         log.info("Preparing build folder...");
         final File gitTestDir = new File("./build/tmp/git");
         gitTestDir.mkdirs();
-        final File repositoryDir = new File(gitTestDir, testRepository.getSlug());
+        final File repositoryDir = new File(gitTestDir, repositorySlug);
         FileUtils.deleteDirectory(repositoryDir);
 
         log.info("Performing git clone...");
-        Assert.assertEquals(0, new ProcessBuilder("git", "clone", repositoryUrl, testRepository.getSlug()).directory(gitTestDir).start().waitFor());
+        Assert.assertEquals(0, new ProcessBuilder("git", "clone", repositoryUrl, repositorySlug).directory(gitTestDir).start().waitFor());
 
         log.info("Creating a file...");
-        Assert.assertNotNull(Files.createFile(new File(repositoryDir, "firstFile.txt").toPath()));
-
+        File firstFile = new File(repositoryDir, "firstFile.txt");
+        FileUtils.write(firstFile, "Harry\nPotter\n");
+        
         log.info("Adding all files to git...");
         Assert.assertEquals(0, new ProcessBuilder("git", "add", "--all").directory(repositoryDir).start().waitFor());
 
@@ -141,20 +151,34 @@ public class StashClientIntegrationTest {
 
         log.info("Pushing commits to repository...");
         Assert.assertEquals(0, new ProcessBuilder("git", "push", "origin", "master").directory(repositoryDir).start().waitFor());
-
+        
+        log.info("Fetching commits...");
+        Page<Commit> commitPage = stashApi.getCommits(projectKey, repositorySlug);
+        List<Commit> commits = commitPage.getValues();
+        Assert.assertEquals(1, commits.size());
+        Commit commit = commits.get(0);
+        String commitId = commit.getId();
+        
+        log.info("Checking that the file is in the repo");
+        LinesPage linesPage = stashApi.browse(projectKey, repositorySlug, "firstFile.txt", commitId);
+        Assert.assertEquals(2, linesPage.getSize());
+        List<Line> lines = linesPage.getLines();
+        Assert.assertEquals("Harry", lines.get(0).getText());
+        Assert.assertEquals("Potter", lines.get(1).getText());
+        
         log.info("Fetching the defaultBranch...");
-        final Branch defaultBranch = stashApi.getRepositoryDefaultBranch(projectKey, testRepository.getSlug());
+        final Branch defaultBranch = stashApi.getRepositoryDefaultBranch(projectKey, repositorySlug);
 
         log.info("Creating a new branch from the defaultbranch...");
         final CreateBranch createBranch = new CreateBranch();
         createBranch.setName(branchName);
         createBranch.setStartPoint(defaultBranch.getId());
-        final Branch createdBranch = stashApi.createBranch(projectKey, testRepository.getSlug(), createBranch);
+        final Branch createdBranch = stashApi.createBranch(projectKey, repositorySlug, createBranch);
         Assert.assertNotNull(createdBranch);
         Assert.assertEquals(featureBranchId, createdBranch.getId());
 
         log.info("Validating if the branch exists...");
-        final Page<Branch> branchPage = stashApi.getRepositoryBranches(projectKey, testRepository.getSlug());
+        final Page<Branch> branchPage = stashApi.getRepositoryBranches(projectKey, repositorySlug);
 
         Branch foundBranch = null;
         for (final Branch branch : branchPage.getValues()) {
@@ -209,14 +233,14 @@ public class StashClientIntegrationTest {
         userRole.setUser(user);
         reviewers.add(userRole);
         pullRequest.setReviewers(reviewers);
-        pullRequest = stashApi.createPullRequest(projectKey, testRepository.getSlug(), pullRequest);
+        pullRequest = stashApi.createPullRequest(projectKey, repositorySlug, pullRequest);
 
         log.info("Testing if pullRequest is mergable for pullRequest with id '{}' and version '{}'.", pullRequest.getId(), pullRequest.getVersion());
-        final PullRequest mergeablePullRequest = stashApi.testPullRequestMergable(projectKey, testRepository.getSlug(), pullRequest.getId());
+        final PullRequest mergeablePullRequest = stashApi.testPullRequestMergable(projectKey, repositorySlug, pullRequest.getId());
         Assert.assertTrue(mergeablePullRequest.isCanMerge());
 
         log.info("Merging pullRequest with id '{}' and version '{}'.", pullRequest.getId(), pullRequest.getVersion());
-        pullRequest = stashApi.mergePullRequest(projectKey, testRepository.getSlug(), pullRequest.getId(), pullRequest.getVersion());
+        pullRequest = stashApi.mergePullRequest(projectKey, repositorySlug, pullRequest.getId(), pullRequest.getVersion());
         Assert.assertEquals(PullRequestState.MERGED, pullRequest.getState());
     }
 

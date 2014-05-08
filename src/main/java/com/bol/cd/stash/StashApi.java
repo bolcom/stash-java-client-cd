@@ -8,6 +8,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 import com.bol.cd.stash.model.Branch;
+import com.bol.cd.stash.model.Commit;
+import com.bol.cd.stash.model.LinesPage;
 import com.bol.cd.stash.model.Page;
 import com.bol.cd.stash.model.Project;
 import com.bol.cd.stash.model.PullRequest;
@@ -180,7 +182,23 @@ public interface StashApi {
             @PathParam("pullRequestId") final String pullRequestId,
             @QueryParam("version") int version
             );
+    
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path}")    
+    public LinesPage browse(
+            @PathParam("projectKey") final String projectKey,
+            @PathParam("repositorySlug") final String repositorySlug,
+            @PathParam("path") final String path,
+            @QueryParam("at") String at
+            );
 
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits")    
+    public Page<Commit> getCommits(
+            @PathParam("projectKey") final String projectKey,
+            @PathParam("repositorySlug") final String repositorySlug
+            );
+    
 
 }
 //@formatter:on
