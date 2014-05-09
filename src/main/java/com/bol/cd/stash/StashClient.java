@@ -1,18 +1,17 @@
 package com.bol.cd.stash;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
 import com.bol.cd.stash.internal.JsonApplicationMediaTypeInterceptor;
-
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.jaxrs.JAXRSModule;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class StashClient {
 
@@ -55,7 +54,7 @@ public class StashClient {
     private Iterable<RequestInterceptor> getRequestInterceptors() {
         final List<RequestInterceptor> base = new ArrayList<RequestInterceptor>(Arrays.asList(
                 new JsonApplicationMediaTypeInterceptor()
-                ));
+        ));
         if (requiresAuthentication) {
             base.add(new BasicAuthRequestInterceptor(username, password));
         }

@@ -20,7 +20,6 @@ public class LinesPage {
         public void setText(String text) {
             this.text = text;
         }
-
     }
 
     public int getSize() {
@@ -54,5 +53,4 @@ public class LinesPage {
     public void setLastPage(boolean lastPage) {
         this.lastPage = lastPage;
     }
-
 }

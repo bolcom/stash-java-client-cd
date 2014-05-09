@@ -1,9 +1,8 @@
 package com.bol.cd.stash.model;
 
+import com.bol.cd.stash.request.PullRequestState;
 
 import java.util.Set;
-
-import com.bol.cd.stash.request.PullRequestState;
 
 public class PullRequest {
     private String id;
@@ -150,5 +149,4 @@ public class PullRequest {
     public void setConflicted(final boolean conflicted) {
         this.conflicted = conflicted;
     }
-
 }

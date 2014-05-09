@@ -37,5 +37,4 @@ public class Project {
     public void setAvatar(final String avatar) {
         this.avatar = avatar;
     }
-
 }

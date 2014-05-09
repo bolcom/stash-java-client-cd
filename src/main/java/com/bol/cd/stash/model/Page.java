@@ -41,5 +41,4 @@ public class Page<T> {
     public void setValues(final List<T> values) {
         this.values = values;
     }
-
 }

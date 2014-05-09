@@ -28,5 +28,4 @@ public class DeleteBranch {
     public void setDryRun(boolean dryRun) {
         this.dryRun = dryRun;
     }
-
 }

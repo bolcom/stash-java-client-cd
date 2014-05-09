@@ -28,5 +28,4 @@ public class CreateBranch {
     public void setStartPoint(String startPoint) {
         this.startPoint = startPoint;
     }
-
 }

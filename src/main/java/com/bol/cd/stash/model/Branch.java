@@ -38,5 +38,4 @@ public class Branch {
     public void setDefault(final boolean isDefault) {
         this.isDefault = isDefault;
     }
-
 }
