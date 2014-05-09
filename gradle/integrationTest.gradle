@@ -17,7 +17,7 @@ task integrationTest(type: Test, description: 'Runs the integration tests.', gro
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
-check.dependsOn(integrationTest)
+//check.dependsOn(integrationTest)
 
 plugins.withType(org.gradle.plugins.ide.idea.IdeaPlugin) { // lazy as plugin not applied yet
     idea {
