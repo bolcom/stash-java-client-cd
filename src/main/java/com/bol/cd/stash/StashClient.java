@@ -1,8 +1,10 @@
 package com.bol.cd.stash;
 
 import com.bol.cd.stash.internal.JsonApplicationMediaTypeInterceptor;
+import com.bol.cd.stash.internal.StashErrorDecoder;
 import feign.Feign;
 import feign.RequestInterceptor;
+import feign.Retryer;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -47,6 +49,7 @@ public class StashClient {
                 .contract(new JAXRSModule.JAXRSContract())
                 .decoder(new JacksonDecoder())
                 .encoder(new JacksonEncoder())
+                .errorDecoder(new StashErrorDecoder())
                 .requestInterceptors(getRequestInterceptors())
                 .target(StashApi.class, url);
     }
