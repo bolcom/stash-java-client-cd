@@ -1,7 +1,12 @@
 package com.bol.cd.stash;
 
+import com.bol.cd.stash.fake.FakeHostnameVerifier;
+import com.bol.cd.stash.fake.FakeSSLSocketFactory;
 import com.bol.cd.stash.internal.JsonApplicationMediaTypeInterceptor;
 import com.bol.cd.stash.internal.StashErrorDecoder;
+
+import dagger.Lazy;
+import feign.Client;
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.Retryer;
@@ -15,12 +20,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSocketFactory;
+
 public class StashClient {
 
     private String username;
     private String password;
     private boolean requiresAuthentication = false;
     private final String url;
+
+    private Client client;
 
     public static StashApi create(final String url) {
         return new StashClient(url).createClient();
@@ -30,9 +40,44 @@ public class StashClient {
         return new StashClient(url).authenticated(username, password).createClient();
     }
 
+    public static StashApi create(Client client, final String url, final String username, final String password) {
+        return new StashClient(url).withClient(client).authenticated(username, password).createClient();
+    }
+    public static StashApi createFakeSSL( final String url, final String username, final String password) {
+        return new StashClient(url).authenticated(username, password).withFakeSSL().createClient();
+    }
+
+
     private StashClient(final String url) {
         Objects.requireNonNull(url, "url must be provided");
         this.url = url;
+    }
+
+    public StashClient withClient(Client client) {
+        Objects.requireNonNull(client, "username must be provided");
+        this.client = client;
+        return this;
+    }
+
+    public StashClient withFakeSSL() {
+        Lazy<SSLSocketFactory> sslContextFactory = new Lazy<SSLSocketFactory>() {
+
+            @Override
+            public SSLSocketFactory get() {
+                return new FakeSSLSocketFactory();
+            }
+        };
+
+        Lazy<HostnameVerifier> hostnameVerifier = new Lazy<HostnameVerifier>() {
+
+            @Override
+            public HostnameVerifier get() {
+                return new FakeHostnameVerifier();
+            }
+        };
+        this.client = new Client.Default(sslContextFactory, hostnameVerifier);
+        return this;
+
     }
 
     public StashClient authenticated(final String username, final String password) {
@@ -45,22 +90,28 @@ public class StashClient {
     }
 
     private StashApi createClient() {
-        return Feign.builder()
-                .contract(new JAXRSModule.JAXRSContract())
-                .decoder(new JacksonDecoder())
-                .encoder(new JacksonEncoder())
-                .errorDecoder(new StashErrorDecoder())
-                .requestInterceptors(getRequestInterceptors())
-                .target(StashApi.class, url);
+        Feign.Builder builder = Feign.builder();
+        if (client != null) {
+            builder.client(client);
+        }
+        //@formatter:off
+            builder.contract(new JAXRSModule.JAXRSContract())
+            .decoder(new JacksonDecoder())
+            .encoder(new JacksonEncoder())
+            .errorDecoder(new StashErrorDecoder())
+            .requestInterceptors(getRequestInterceptors())
+            .target(StashApi.class, url);
+            //@formatter:on
+        return builder.target(StashApi.class, url);
+
     }
 
     private Iterable<RequestInterceptor> getRequestInterceptors() {
-        final List<RequestInterceptor> base = new ArrayList<RequestInterceptor>(Arrays.asList(
-                new JsonApplicationMediaTypeInterceptor()
-        ));
+        final List<RequestInterceptor> base = new ArrayList<RequestInterceptor>(Arrays.asList(new JsonApplicationMediaTypeInterceptor()));
         if (requiresAuthentication) {
             base.add(new BasicAuthRequestInterceptor(username, password));
         }
         return base;
     }
+
 }
