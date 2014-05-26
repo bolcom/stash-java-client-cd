@@ -50,7 +50,7 @@ public class StashClient {
 
     private StashClient(final String url) {
         Objects.requireNonNull(url, "url must be provided");
-        this.url = url;
+        this.url = url.replaceAll("/\\z", "");
     }
 
     public StashClient withClient(Client client) {
@@ -79,7 +79,7 @@ public class StashClient {
                 return fakeHostnameVerifier;
             }
         };
-        
+
         this.client = new Client.Default(sslContextFactory, hostnameVerifier);
         return this;
 
