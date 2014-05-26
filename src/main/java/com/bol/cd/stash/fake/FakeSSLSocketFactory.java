@@ -3,6 +3,8 @@ package com.bol.cd.stash.fake;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
@@ -27,9 +29,8 @@ public class FakeSSLSocketFactory extends SSLSocketFactory {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, new TrustManager[] { new FakeTrustManager() }, null);
             factory = (SSLSocketFactory) sslcontext.getSocketFactory();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(-1);
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new IllegalStateException("Unable to construct FakeSSLSocketFactory", e);
         }
     }
 

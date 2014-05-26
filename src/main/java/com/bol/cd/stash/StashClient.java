@@ -43,10 +43,10 @@ public class StashClient {
     public static StashApi create(Client client, final String url, final String username, final String password) {
         return new StashClient(url).withClient(client).authenticated(username, password).createClient();
     }
-    public static StashApi createFakeSSL( final String url, final String username, final String password) {
+
+    public static StashApi createFakeSSL(final String url, final String username, final String password) {
         return new StashClient(url).authenticated(username, password).withFakeSSL().createClient();
     }
-
 
     private StashClient(final String url) {
         Objects.requireNonNull(url, "url must be provided");
@@ -62,19 +62,24 @@ public class StashClient {
     public StashClient withFakeSSL() {
         Lazy<SSLSocketFactory> sslContextFactory = new Lazy<SSLSocketFactory>() {
 
+            private FakeSSLSocketFactory sslSocketFactory = new FakeSSLSocketFactory();
+
             @Override
             public SSLSocketFactory get() {
-                return new FakeSSLSocketFactory();
+                return sslSocketFactory;
             }
         };
 
         Lazy<HostnameVerifier> hostnameVerifier = new Lazy<HostnameVerifier>() {
 
+            private FakeHostnameVerifier fakeHostnameVerifier = new FakeHostnameVerifier();
+
             @Override
             public HostnameVerifier get() {
-                return new FakeHostnameVerifier();
+                return fakeHostnameVerifier;
             }
         };
+        
         this.client = new Client.Default(sslContextFactory, hostnameVerifier);
         return this;
 
