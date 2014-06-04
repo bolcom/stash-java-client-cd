@@ -28,4 +28,24 @@ public class Repository {
     public void setProject(Project project) {
         this.project = project;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Repository that = (Repository) o;
+
+        if (project != null ? !project.equals(that.project) : that.project != null) return false;
+        if (slug != null ? !slug.equals(that.slug) : that.slug != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = slug != null ? slug.hashCode() : 0;
+        result = 31 * result + (project != null ? project.hashCode() : 0);
+        return result;
+    }
 }

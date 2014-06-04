@@ -37,4 +37,21 @@ public class Project {
     public void setAvatar(final String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        if (key != null ? !key.equals(project.key) : project.key != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return key != null ? key.hashCode() : 0;
+    }
 }
