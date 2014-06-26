@@ -7,7 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RepositoryUrlFactory {
-    private final static Pattern gitUrlPattern = Pattern.compile(".*/scm/(.*)/(.*).git");
+    private final static Pattern gitUrlPattern = Pattern.compile(".*/(.*)/(.*).git");
+
     private RepositoryUrlFactory() {
     }
 
