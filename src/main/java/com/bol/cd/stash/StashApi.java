@@ -8,6 +8,7 @@ import javax.ws.rs.*;
 /**
  * https://developer.atlassian.com/static/rest/stash/2.12.1/stash-branch-utils-rest.html
  * https://developer.atlassian.com/static/rest/stash/2.12.1/stash-rest.html
+ * https://developer.atlassian.com/static/rest/stash/3.2.2/stash-rest.html#idp2039824
  */
 //@formatter:off
 public interface StashApi {
@@ -194,6 +195,15 @@ public interface StashApi {
             @PathParam("projectKey") final String projectKey,
             @PathParam("repositorySlug") final String repositorySlug,
             @PathParam("commitId") final String commitId
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/compare/commits")
+    public Page<ComparedChange> getComparedCommits(
+            @PathParam("projectKey") final String projectKey,
+            @PathParam("repositorySlug") final String repositorySlug,
+            @QueryParam("from") String from,
+            @QueryParam("to") String to
     );
 }
 //@formatter:on
