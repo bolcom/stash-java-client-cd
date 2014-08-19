@@ -124,6 +124,15 @@ public interface StashApi {
     public Page<PullRequest> getPullRequests(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("at") String atBranch,
+            @QueryParam("state") PullRequestState state
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests")
+    public Page<PullRequest> getPullRequests(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
             @QueryParam("direction") PullRequestDirection direction,
             @QueryParam("at") String atBranch,
             @QueryParam("state") PullRequestState state,
@@ -180,6 +189,13 @@ public interface StashApi {
             @PathParam("repositorySlug") final String repositorySlug
     );
 
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId}")
+    public Commit getCommit(
+            @PathParam("projectKey") final String projectKey,
+            @PathParam("repositorySlug") final String repositorySlug,
+            @PathParam("commitId") final String commitId
+    );
 
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/compare/commits")
@@ -189,7 +205,5 @@ public interface StashApi {
             @QueryParam("from") String from,
             @QueryParam("to") String to
     );
-
-
 }
 //@formatter:on

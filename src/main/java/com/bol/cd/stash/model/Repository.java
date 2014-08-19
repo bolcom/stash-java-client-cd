@@ -1,6 +1,10 @@
 package com.bol.cd.stash.model;
 
-public class Repository {
+
+import java.io.Serializable;
+
+public class Repository implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String slug;
     private String name;
     private Project project;
