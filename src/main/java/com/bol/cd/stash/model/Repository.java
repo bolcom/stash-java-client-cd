@@ -52,4 +52,13 @@ public class Repository implements Serializable {
         result = 31 * result + (project != null ? project.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Repository{" +
+                "name='" + name + '\'' +
+                ", project=" + project +
+                ", slug='" + slug + '\'' +
+                '}';
+    }
 }
