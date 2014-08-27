@@ -55,9 +55,13 @@ public class Repository implements Serializable {
 
     @Override
     public String toString() {
+        String projectKey = null;
+        if(project!=null){
+            projectKey = project.getKey();
+        }
+
         return "Repository{" +
-                "name='" + name + '\'' +
-                ", project=" + project +
+                "project=" + projectKey +
                 ", slug='" + slug + '\'' +
                 '}';
     }
