@@ -1,19 +1,18 @@
 package com.bol.cd.stash.fake;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Used for ssl tests to simplify setup.
@@ -27,7 +26,7 @@ public class FakeSSLSocketFactory extends SSLSocketFactory {
         log.warn("You are using a Fake SSLSocketFactory, this is not recommended for production usage! Please use a valid socket factory instead!");
         try {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
-            sslcontext.init(null, new TrustManager[] { new FakeTrustManager() }, null);
+            sslcontext.init(null, new TrustManager[]{new FakeTrustManager()}, null);
             factory = (SSLSocketFactory) sslcontext.getSocketFactory();
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new IllegalStateException("Unable to construct FakeSSLSocketFactory", e);
@@ -41,8 +40,8 @@ public class FakeSSLSocketFactory extends SSLSocketFactory {
     private Socket addAnonCipher(Socket socket) {
         SSLSocket ssl = (SSLSocket) socket;
         final String[] ciphers = ssl.getEnabledCipherSuites();
-        final String[] anonCiphers = { "SSL_DH_anon_WITH_RC4_128_MD5", "SSL_DH_anon_WITH_RC4_128_MD5", "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
-                "SSL_DH_anon_WITH_DES_CBC_SHA", "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5", "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA" };
+        final String[] anonCiphers = {"SSL_DH_anon_WITH_RC4_128_MD5", "SSL_DH_anon_WITH_RC4_128_MD5", "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA",
+                "SSL_DH_anon_WITH_DES_CBC_SHA", "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5", "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA"};
         final String[] newCiphers = new String[ciphers.length + anonCiphers.length];
         System.arraycopy(ciphers, 0, newCiphers, 0, ciphers.length);
         System.arraycopy(anonCiphers, 0, newCiphers, ciphers.length, anonCiphers.length);

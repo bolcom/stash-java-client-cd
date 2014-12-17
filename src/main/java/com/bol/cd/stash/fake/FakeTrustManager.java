@@ -1,8 +1,7 @@
 package com.bol.cd.stash.fake;
 
-import java.security.cert.X509Certificate;
-
 import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
 
 public class FakeTrustManager implements X509TrustManager {
 

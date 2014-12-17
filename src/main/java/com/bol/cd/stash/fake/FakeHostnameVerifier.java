@@ -1,10 +1,10 @@
 package com.bol.cd.stash.fake;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
 
 public class FakeHostnameVerifier implements HostnameVerifier {
 

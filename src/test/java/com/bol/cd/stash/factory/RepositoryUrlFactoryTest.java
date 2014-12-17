@@ -25,8 +25,6 @@ public class RepositoryUrlFactoryTest {
         Assert.assertNotNull(gitRepository);
         Assert.assertEquals("tpt", gitRepository.getProject().getKey());
         Assert.assertEquals("testrepository", gitRepository.getSlug());
-
-
     }
 
     @Test
@@ -35,8 +33,6 @@ public class RepositoryUrlFactoryTest {
         Assert.assertNotNull(gitRepository);
         Assert.assertEquals("tpt", gitRepository.getProject().getKey());
         Assert.assertEquals("testrepository", gitRepository.getSlug());
-
-
     }
 
     @Test
@@ -45,8 +41,5 @@ public class RepositoryUrlFactoryTest {
         Assert.assertNotNull(gitRepository);
         Assert.assertEquals("tpt", gitRepository.getProject().getKey());
         Assert.assertEquals("testrepository", gitRepository.getSlug());
-
-
     }
-
 }

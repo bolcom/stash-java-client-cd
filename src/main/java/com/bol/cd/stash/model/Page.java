@@ -1,9 +1,10 @@
 package com.bol.cd.stash.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Page<T> {
-
+public class Page<T> implements Serializable {
+    private static final long serialVersionUID = -5624783442511242212L;
     private int size;
     private int limit;
     private boolean lastPage;
@@ -14,7 +15,7 @@ public class Page<T> {
         return size;
     }
 
-    public void setSize(final int size) {
+    public void setSize(int size) {
         this.size = size;
     }
 
@@ -22,7 +23,7 @@ public class Page<T> {
         return limit;
     }
 
-    public void setLimit(final int limit) {
+    public void setLimit(int limit) {
         this.limit = limit;
     }
 
@@ -30,7 +31,7 @@ public class Page<T> {
         return lastPage;
     }
 
-    public void setLastPage(final boolean lastPage) {
+    public void setLastPage(boolean lastPage) {
         this.lastPage = lastPage;
     }
 
@@ -38,7 +39,42 @@ public class Page<T> {
         return values;
     }
 
-    public void setValues(final List<T> values) {
+    public void setValues(List<T> values) {
         this.values = values;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Page page = (Page) o;
+
+        if (lastPage != page.lastPage) return false;
+        if (limit != page.limit) return false;
+        if (size != page.size) return false;
+        if (values != null ? !values.equals(page.values) : page.values != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = size;
+        result = 31 * result + limit;
+        result = 31 * result + (lastPage ? 1 : 0);
+        result = 31 * result + (values != null ? values.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Page{");
+        sb.append("size=").append(size);
+        sb.append(", limit=").append(limit);
+        sb.append(", lastPage=").append(lastPage);
+        sb.append(", values=").append(values);
+        sb.append('}');
+        return sb.toString();
     }
 }

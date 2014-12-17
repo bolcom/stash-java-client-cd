@@ -1,6 +1,6 @@
 package com.bol.cd.stash;
 
-public class StashException extends RuntimeException  {
+public class StashException extends RuntimeException {
     private int status;
 
     public StashException(int status, String message, Throwable cause) {

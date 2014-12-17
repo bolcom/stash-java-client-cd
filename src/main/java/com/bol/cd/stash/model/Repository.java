@@ -1,13 +1,14 @@
 package com.bol.cd.stash.model;
 
-
 import java.io.Serializable;
+import java.util.Map;
 
 public class Repository implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3598967315405621898L;
     private String slug;
     private String name;
     private Project project;
+    private Map links;
 
     public String getSlug() {
         return slug;
@@ -33,6 +34,14 @@ public class Repository implements Serializable {
         this.project = project;
     }
 
+    public Map getLinks() {
+        return links;
+    }
+
+    public void setLinks(Map links) {
+        this.links = links;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,7 +65,7 @@ public class Repository implements Serializable {
     @Override
     public String toString() {
         String projectKey = null;
-        if(project!=null){
+        if (project != null) {
             projectKey = project.getKey();
         }
 

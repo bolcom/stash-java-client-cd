@@ -4,27 +4,23 @@ import com.bol.cd.stash.fake.FakeHostnameVerifier;
 import com.bol.cd.stash.fake.FakeSSLSocketFactory;
 import com.bol.cd.stash.internal.JsonApplicationMediaTypeInterceptor;
 import com.bol.cd.stash.internal.StashErrorDecoder;
-
 import dagger.Lazy;
 import feign.Client;
 import feign.Feign;
 import feign.RequestInterceptor;
-import feign.Retryer;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.jaxrs.JAXRSModule;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSocketFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSocketFactory;
-
 public class StashClient {
-
     private String username;
     private String password;
     private boolean requiresAuthentication = false;
@@ -80,9 +76,8 @@ public class StashClient {
             }
         };
 
-        this.client = new Client.Default(sslContextFactory, hostnameVerifier);
+        client = new Client.Default(sslContextFactory, hostnameVerifier);
         return this;
-
     }
 
     public StashClient authenticated(final String username, final String password) {
@@ -100,15 +95,14 @@ public class StashClient {
             builder.client(client);
         }
         //@formatter:off
-            builder.contract(new JAXRSModule.JAXRSContract())
-            .decoder(new JacksonDecoder())
-            .encoder(new JacksonEncoder())
-            .errorDecoder(new StashErrorDecoder())
-            .requestInterceptors(getRequestInterceptors())
-            .target(StashApi.class, url);
-            //@formatter:on
+        builder.contract(new JAXRSModule.JAXRSContract())
+                .decoder(new JacksonDecoder())
+                .encoder(new JacksonEncoder())
+                .errorDecoder(new StashErrorDecoder())
+                .requestInterceptors(getRequestInterceptors())
+                .target(StashApi.class, url);
+        //@formatter:on
         return builder.target(StashApi.class, url);
-
     }
 
     private Iterable<RequestInterceptor> getRequestInterceptors() {
@@ -118,5 +112,4 @@ public class StashClient {
         }
         return base;
     }
-
 }

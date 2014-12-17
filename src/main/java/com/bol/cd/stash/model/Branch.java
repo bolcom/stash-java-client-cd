@@ -1,7 +1,9 @@
 package com.bol.cd.stash.model;
 
-public class Branch {
+import java.io.Serializable;
 
+public class Branch implements Serializable {
+    private static final long serialVersionUID = 1965752533172073272L;
     private String id;
     private String displayId;
     private String latestChangeset;
@@ -37,5 +39,36 @@ public class Branch {
 
     public void setDefault(final boolean isDefault) {
         this.isDefault = isDefault;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Branch branch = (Branch) o;
+
+        if (isDefault != branch.isDefault) return false;
+        if (id != null ? !id.equals(branch.id) : branch.id != null) return false;
+        if (latestChangeset != null ? !latestChangeset.equals(branch.latestChangeset) : branch.latestChangeset != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (latestChangeset != null ? latestChangeset.hashCode() : 0);
+        result = 31 * result + (isDefault ? 1 : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Branch{");
+        sb.append("isDefault=").append(isDefault);
+        sb.append('}');
+        return sb.toString();
     }
 }
