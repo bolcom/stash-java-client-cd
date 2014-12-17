@@ -19,11 +19,15 @@ versions += [
         stashJavaClient: '1.3.6',
         feign          : '6.1.1',
         slf4j          : '1.7.6',
+        log4j          : '1.2.17',
+        groovy         : '2.3.8',
+        commonsIo      : '2.4',
 ]
 
 libraries += [
-        jmockit: 'com.googlecode.jmockit:jmockit:1.6', //Not using 1.7, https://code.google.com/p/jmockit/issues/detail?id=343
-        junit  : 'junit:junit:4.11',
+        junit    : 'junit:junit:4.11',
+        groovy   : "org.codehaus.groovy:groovy:${versions.groovy}",
+        commonsIo: "commons-io:commons-io:${versions.commonsIo}",
 ]
 
 libraries.feign = [
@@ -36,7 +40,13 @@ libraries.slf4j = [
         "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
         "org.slf4j:slf4j-api:${versions.slf4j}",
         "org.slf4j:slf4j-log4j12:${versions.slf4j}",
-        "log4j:log4j:1.2.17"
+        "log4j:log4j:${versions.log4j}",
+]
+
+libraries.spock = ['org.spockframework:spock-core:0.7-groovy-2.0',
+                   libraries.groovy,
+                   'org.objenesis:objenesis:2.0',
+                   'cglib:cglib-nodep:2.2',
 ]
 
 jar {
@@ -53,9 +63,9 @@ dependencies {
     compile libraries.feign
     compile libraries.slf4j
 
-    testCompile 'commons-io:commons-io:2.4'
+    testCompile libraries.commonsIo
     testCompile libraries.junit
-    testCompile libraries.jmockit
+    testCompile libraries.spock
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

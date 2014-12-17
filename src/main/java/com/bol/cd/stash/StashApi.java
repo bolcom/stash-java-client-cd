@@ -4,6 +4,7 @@ import com.bol.cd.stash.model.*;
 import com.bol.cd.stash.request.*;
 
 import javax.ws.rs.*;
+import java.util.Map;
 
 /**
  * https://developer.atlassian.com/static/rest/stash/2.12.1/stash-branch-utils-rest.html
@@ -20,26 +21,6 @@ public interface StashApi {
     @POST
     @Path("/rest/api/1.0/projects")
     public Project createProject(Project project);
-
-    @GET
-    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}")
-    public Repository getRepository(
-            @PathParam("projectKey") String projectKey,
-            @PathParam("repositorySlug") String repositorySlug
-    );
-
-    @GET
-    @Path("/rest/api/1.0/projects/{projectKey}/repos")
-    public Page<Repository> getRepositories(
-            @PathParam("projectKey") final String projectKey
-    );
-
-    @POST
-    @Path("/rest/api/1.0/projects/{projectKey}/repos")
-    public Repository createRepository(
-            @PathParam("projectKey") final String projectKey,
-            final Repository repository
-    );
 
     @DELETE
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}")
@@ -58,6 +39,56 @@ public interface StashApi {
     @Path("/rest/api/1.0/projects/{projectKey}")
     public void deleteProject(
             @PathParam("projectKey") String projectKey
+    );
+
+    @PUT
+    @Path("/rest/api/1.0/projects/{projectKey}/permissions/groups")
+    public void grantGroupPermission(
+            @PathParam("projectKey") String projectKey,
+            @QueryParam("name") String groupName,
+            @QueryParam("permission") String permission
+    );
+
+    @DELETE
+    @Path("/rest/api/1.0/projects/{projectKey}/permissions/groups")
+    public void revokeGroupPermission(
+            @PathParam("projectKey") String projectKey,
+            @QueryParam("name") String groupName
+    );
+
+    @PUT
+    @Path("/rest/api/1.0/projects/{projectKey}/permissions/users")
+    public void grantUserPermission(
+            @PathParam("projectKey") String projectKey,
+            @QueryParam("name") String userName,
+            @QueryParam("permission") String permission
+    );
+
+    @DELETE
+    @Path("/rest/api/1.0/projects/{projectKey}/permissions/users")
+    public void revokeUserPermission(
+            @PathParam("projectKey") String projectKey,
+            @QueryParam("name") String userName
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos")
+    public Page<Repository> getRepositories(
+            @PathParam("projectKey") String projectKey
+    );
+
+    @POST
+    @Path("/rest/api/1.0/projects/{projectKey}/repos")
+    public Repository createRepository(
+            @PathParam("projectKey") String projectKey,
+            Repository repository
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}")
+    public Repository getRepository(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug
     );
 
     @GET
@@ -113,6 +144,39 @@ public interface StashApi {
     );
 
     @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path}")
+    public LinesPage browse(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("path") String path,
+            @QueryParam("at") String at
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits")
+    public Page<Commit> getCommits(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId}")
+    public Commit getCommit(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("commitId") String commitId
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/compare/commits")
+    public Page<ComparedChange> getComparedCommits(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("from") String from,
+            @QueryParam("to") String to
+    );
+
+    @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests")
     public Page<PullRequest> getPullRequests(
             @PathParam("projectKey") String projectKey,
@@ -150,60 +214,68 @@ public interface StashApi {
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/merge")
     public PullRequest testPullRequestMergable(
-            @PathParam("projectKey") final String projectKey,
-            @PathParam("repositorySlug") final String repositorySlug,
-            @PathParam("pullRequestId") final String pullRequestId
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("pullRequestId") String pullRequestId
     );
 
     @POST
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/merge")
     public PullRequest mergePullRequest(
-            @PathParam("projectKey") final String projectKey,
-            @PathParam("repositorySlug") final String repositorySlug,
-            @PathParam("pullRequestId") final String pullRequestId,
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("pullRequestId") String pullRequestId,
             @QueryParam("version") int version
     );
 
     @POST
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/decline")
     public void declinePullRequest(
-            @PathParam("projectKey") final String projectKey,
-            @PathParam("repositorySlug") final String repositorySlug,
-            @PathParam("pullRequestId") final String pullRequestId,
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("pullRequestId") String pullRequestId,
             @QueryParam("version") int version
     );
 
     @GET
-    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path}")
-    public LinesPage browse(
-            @PathParam("projectKey") final String projectKey,
-            @PathParam("repositorySlug") final String repositorySlug,
-            @PathParam("path") final String path,
-            @QueryParam("at") String at
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/settings/hooks/{hookKey}")
+    public RepositoryHook getRepositoryHook(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("hookKey") String hookKey
+    );
+
+    @PUT
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/settings/hooks/{hookKey}/enabled")
+    public RepositoryHook enableRepositoryHook(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("hookKey") String hookKey
+    );
+
+    @DELETE
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/settings/hooks/{hookKey}/enabled")
+    public RepositoryHook disableRepositoryHook(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("hookKey") String hookKey
     );
 
     @GET
-    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits")
-    public Page<Commit> getCommits(
-            @PathParam("projectKey") final String projectKey,
-            @PathParam("repositorySlug") final String repositorySlug
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/settings/hooks/{hookKey}/settings")
+    public Map<String, String> getRepositoryHookSettings(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("hookKey") String hookKey
     );
 
-    @GET
-    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId}")
-    public Commit getCommit(
-            @PathParam("projectKey") final String projectKey,
-            @PathParam("repositorySlug") final String repositorySlug,
-            @PathParam("commitId") final String commitId
-    );
-
-    @GET
-    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/compare/commits")
-    public Page<ComparedChange> getComparedCommits(
-            @PathParam("projectKey") final String projectKey,
-            @PathParam("repositorySlug") final String repositorySlug,
-            @QueryParam("from") String from,
-            @QueryParam("to") String to
+    @PUT
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/settings/hooks/{hookKey}/settings")
+    public RepositoryHook setRepositoryHookSettings(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("hookKey") String hookKey,
+            Map<String, String> settings
     );
 }
 //@formatter:on
