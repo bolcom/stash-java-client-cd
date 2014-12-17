@@ -7,6 +7,7 @@ import com.bol.cd.stash.internal.StashErrorDecoder;
 import dagger.Lazy;
 import feign.Client;
 import feign.Feign;
+import feign.Logger;
 import feign.RequestInterceptor;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.jackson.JacksonDecoder;
@@ -27,6 +28,8 @@ public class StashClient {
     private final String url;
 
     private Client client;
+    private Logger logger;
+    private Logger.Level logLevel = Logger.Level.BASIC;
 
     public static StashApi create(final String url) {
         return new StashClient(url).createClient();
@@ -44,13 +47,13 @@ public class StashClient {
         return new StashClient(url).authenticated(username, password).withFakeSSL().createClient();
     }
 
-    private StashClient(final String url) {
+    public StashClient(final String url) {
         Objects.requireNonNull(url, "url must be provided");
         this.url = url.replaceAll("/\\z", "");
     }
 
     public StashClient withClient(Client client) {
-        Objects.requireNonNull(client, "username must be provided");
+        Objects.requireNonNull(client, "client must be provided");
         this.client = client;
         return this;
     }
@@ -80,6 +83,18 @@ public class StashClient {
         return this;
     }
 
+    public StashClient withLogger(Logger logger) {
+        return withLogger(logger, logLevel);
+    }
+
+    public StashClient withLogger(Logger logger, Logger.Level level) {
+        Objects.requireNonNull(logger, "logger must be provided");
+        Objects.requireNonNull(level, "log level must be provided");
+        this.logger = logger;
+        this.logLevel = level;
+        return this;
+    }
+
     public StashClient authenticated(final String username, final String password) {
         Objects.requireNonNull(username, "username must be provided");
         Objects.requireNonNull(password, "password must be provided");
@@ -89,7 +104,7 @@ public class StashClient {
         return this;
     }
 
-    private StashApi createClient() {
+    public StashApi createClient() {
         Feign.Builder builder = Feign.builder();
         if (client != null) {
             builder.client(client);
@@ -99,9 +114,13 @@ public class StashClient {
                 .decoder(new JacksonDecoder())
                 .encoder(new JacksonEncoder())
                 .errorDecoder(new StashErrorDecoder())
-                .requestInterceptors(getRequestInterceptors())
-                .target(StashApi.class, url);
+                .requestInterceptors(getRequestInterceptors());
         //@formatter:on
+
+        if (logger != null) {
+            builder.logger(logger)
+                    .logLevel(logLevel);
+        }
         return builder.target(StashApi.class, url);
     }
 

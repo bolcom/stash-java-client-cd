@@ -2,6 +2,7 @@ package com.bol.cd.stash;
 
 import com.bol.cd.stash.model.Page;
 import com.bol.cd.stash.model.PullRequest;
+import feign.Client;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -19,6 +20,18 @@ public class StashClientTest {
     @Test
     public void canCreateAuthenticatedStashClient() {
         StashApi api = StashClient.create("url", "username", "password");
+        assertNotNull(api);
+    }
+
+    @Test
+    public void canCreateFakeSSLStashClient() {
+        StashApi api = StashClient.createFakeSSL("url", "username", "password");
+        assertNotNull(api);
+    }
+
+    @Test
+    public void canCreateStashClientWithCustomClient() {
+        StashApi api = StashClient.create(new Client.Default(null, null), "url", "username", "password");
         assertNotNull(api);
     }
 
