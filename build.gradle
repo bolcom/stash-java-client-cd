@@ -19,7 +19,7 @@ versions += [
         stashJavaClient: '1.3.6',
         feign          : '6.1.1',
         slf4j          : '1.7.6',
-        log4j          : '1.2.17',
+        logback        : '1.1.2',
         groovy         : '2.3.8',
         commonsIo      : '2.4',
 ]
@@ -28,6 +28,7 @@ libraries += [
         junit    : 'junit:junit:4.11',
         groovy   : "org.codehaus.groovy:groovy:${versions.groovy}",
         commonsIo: "commons-io:commons-io:${versions.commonsIo}",
+        loggingApi : "org.slf4j:slf4j-api:${versions.slf4j}",
 ]
 
 libraries.feign = [
@@ -36,11 +37,9 @@ libraries.feign = [
         "com.netflix.feign:feign-jaxrs:${versions.feign}",
 ]
 
-libraries.slf4j = [
+libraries.logging = [
         "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
-        "org.slf4j:slf4j-api:${versions.slf4j}",
-        "org.slf4j:slf4j-log4j12:${versions.slf4j}",
-        "log4j:log4j:${versions.log4j}",
+        "ch.qos.logback:logback-classic:${versions.logback}",
 ]
 
 libraries.spock = ['org.spockframework:spock-core:0.7-groovy-2.0',
@@ -61,11 +60,12 @@ repositories {
 
 dependencies {
     compile libraries.feign
-    compile libraries.slf4j
+    compile libraries.loggingApi
 
     testCompile libraries.commonsIo
     testCompile libraries.junit
     testCompile libraries.spock
+    testRuntime libraries.logging
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

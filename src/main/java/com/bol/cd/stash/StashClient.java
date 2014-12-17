@@ -109,13 +109,11 @@ public class StashClient {
         if (client != null) {
             builder.client(client);
         }
-        //@formatter:off
         builder.contract(new JAXRSModule.JAXRSContract())
                 .decoder(new JacksonDecoder())
                 .encoder(new JacksonEncoder())
                 .errorDecoder(new StashErrorDecoder())
                 .requestInterceptors(getRequestInterceptors());
-        //@formatter:on
 
         if (logger != null) {
             builder.logger(logger)

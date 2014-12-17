@@ -11,7 +11,6 @@ import java.util.Map;
  * https://developer.atlassian.com/static/rest/stash/2.12.1/stash-rest.html
  * https://developer.atlassian.com/static/rest/stash/3.2.2/stash-rest.html#idp2039824
  */
-//@formatter:off
 public interface StashApi {
 
     @GET
@@ -41,12 +40,22 @@ public interface StashApi {
             @PathParam("projectKey") String projectKey
     );
 
+    /**
+     * Grant group permission to a project.
+     *
+     * @param projectKey Key for project
+     * @param groupName  GroupName of group to grant permission
+     * @param permission Permission to grant, see {@link com.bol.cd.stash.model.ProjectPermission}
+     * @param body       Empty map is fine, but a body is required by the HTTP standard
+     *                   even though the Stash docs does not describe it
+     */
     @PUT
     @Path("/rest/api/1.0/projects/{projectKey}/permissions/groups")
     public void grantGroupPermission(
             @PathParam("projectKey") String projectKey,
             @QueryParam("name") String groupName,
-            @QueryParam("permission") String permission
+            @QueryParam("permission") String permission,
+            Map body
     );
 
     @DELETE
@@ -56,12 +65,22 @@ public interface StashApi {
             @QueryParam("name") String groupName
     );
 
+    /**
+     * Grant user permission to a project.
+     *
+     * @param projectKey Key for project
+     * @param userName   Username of user to grant permission
+     * @param permission Permission to grant, see {@link com.bol.cd.stash.model.ProjectPermission}
+     * @param body       Empty map is fine, but a body is required by the HTTP standard
+     *                   even though the Stash docs does not describe it
+     */
     @PUT
     @Path("/rest/api/1.0/projects/{projectKey}/permissions/users")
     public void grantUserPermission(
             @PathParam("projectKey") String projectKey,
             @QueryParam("name") String userName,
-            @QueryParam("permission") String permission
+            @QueryParam("permission") String permission,
+            Map body
     );
 
     @DELETE
@@ -245,12 +264,22 @@ public interface StashApi {
             @PathParam("hookKey") String hookKey
     );
 
+    /**
+     * Enable hook on repository.
+     *
+     * @param projectKey     Key of project
+     * @param repositorySlug Slug of repository
+     * @param hookKey        Key of hook
+     * @param body           Empty map is fine, but a body is required by the HTTP standard
+     *                       even though the Stash docs does not describe it
+     */
     @PUT
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/settings/hooks/{hookKey}/enabled")
     public void enableRepositoryHook(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
-            @PathParam("hookKey") String hookKey
+            @PathParam("hookKey") String hookKey,
+            Map body
     );
 
     @DELETE
@@ -278,4 +307,3 @@ public interface StashApi {
             Map<String, String> settings
     );
 }
-//@formatter:on
