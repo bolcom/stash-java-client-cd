@@ -247,7 +247,7 @@ public interface StashApi {
 
     @PUT
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/settings/hooks/{hookKey}/enabled")
-    public RepositoryHook enableRepositoryHook(
+    public void enableRepositoryHook(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             @PathParam("hookKey") String hookKey
@@ -255,7 +255,7 @@ public interface StashApi {
 
     @DELETE
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/settings/hooks/{hookKey}/enabled")
-    public RepositoryHook disableRepositoryHook(
+    public void disableRepositoryHook(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             @PathParam("hookKey") String hookKey
@@ -271,7 +271,7 @@ public interface StashApi {
 
     @PUT
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/settings/hooks/{hookKey}/settings")
-    public RepositoryHook setRepositoryHookSettings(
+    public void setRepositoryHookSettings(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             @PathParam("hookKey") String hookKey,
