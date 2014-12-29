@@ -1,6 +1,7 @@
 package com.bol.cd.stash.model;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 public class Repository implements Serializable {
@@ -8,7 +9,7 @@ public class Repository implements Serializable {
     private String slug;
     private String name;
     private Project project;
-    private Map links;
+    private Map<String, List<Link>> links;
 
     public String getSlug() {
         return slug;
@@ -34,23 +35,27 @@ public class Repository implements Serializable {
         this.project = project;
     }
 
-    public Map getLinks() {
+    public Map<String, List<Link>> getLinks() {
         return links;
     }
 
-    public void setLinks(Map links) {
+    public void setLinks(Map<String, List<Link>> links) {
         this.links = links;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Repository that = (Repository) o;
 
-        if (project != null ? !project.equals(that.project) : that.project != null) return false;
-        if (slug != null ? !slug.equals(that.slug) : that.slug != null) return false;
+        if (project != null ? !project.equals(that.project) : that.project != null)
+            return false;
+        if (slug != null ? !slug.equals(that.slug) : that.slug != null)
+            return false;
 
         return true;
     }
@@ -69,9 +74,6 @@ public class Repository implements Serializable {
             projectKey = project.getKey();
         }
 
-        return "Repository{" +
-                "project=" + projectKey +
-                ", slug='" + slug + '\'' +
-                '}';
+        return "Repository{" + "project=" + projectKey + ", slug='" + slug + '\'' + '}';
     }
 }
