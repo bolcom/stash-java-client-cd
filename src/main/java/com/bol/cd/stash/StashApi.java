@@ -1,15 +1,21 @@
 package com.bol.cd.stash;
 
 import com.bol.cd.stash.model.*;
+import com.bol.cd.stash.model.ssh.ProjectAccessKey;
+import com.bol.cd.stash.model.ssh.RepositoryAccessKey;
+import com.bol.cd.stash.model.ssh.SshKey;
 import com.bol.cd.stash.request.*;
+import com.bol.cd.stash.request.PullRequestDirection;
+import com.bol.cd.stash.request.PullRequestSortOrder;
+import com.bol.cd.stash.request.PullRequestState;
 
 import javax.ws.rs.*;
 import java.util.Map;
 
 /**
- * https://developer.atlassian.com/static/rest/stash/2.12.1/stash-branch-utils-rest.html
- * https://developer.atlassian.com/static/rest/stash/2.12.1/stash-rest.html
- * https://developer.atlassian.com/static/rest/stash/3.2.2/stash-rest.html#idp2039824
+ * https://developer.atlassian.com/static/rest/stash/3.5.1/stash-branch-utils-rest.html
+ * https://developer.atlassian.com/static/rest/stash/3.5.1/stash-rest.html
+ * https://developer.atlassian.com/static/rest/stash/3.5.1/stash-ssh-rest.html
  */
 public interface StashApi {
 
@@ -88,6 +94,114 @@ public interface StashApi {
     public void revokeUserPermission(
             @PathParam("projectKey") String projectKey,
             @QueryParam("name") String userName
+    );
+
+    @POST
+    @Path("/rest/keys/1.0/projects/{projectKey}/ssh")
+    public ProjectAccessKey addProjectAccessKey(
+            @PathParam("projectKey") String projectKey,
+            ProjectAccessKey accessKey
+    );
+
+    @GET
+    @Path("/rest/keys/1.0/projects/{projectKey}/ssh")
+    public Page<ProjectAccessKey> getProjectAccessKeys(
+            @PathParam("projectKey") String projectKey
+    );
+
+    @GET
+    @Path("/rest/keys/1.0/projects/{projectKey}/ssh/{keyId}")
+    public ProjectAccessKey getProjectAccessKey(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("keyId") String keyId
+    );
+
+    @DELETE
+    @Path("/rest/keys/1.0/projects/{projectKey}/ssh/{keyId}")
+    public void deleteProjectAccessKey(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("keyId") String keyId
+    );
+
+    @GET
+    @Path("/rest/keys/1.0/ssh/{keyId}/projects")
+    public Page<ProjectAccessKey> getAccessKeyProjects(
+            @PathParam("keyId") String keyId
+    );
+
+    /**
+     * Updates the permission granted to the specified SSH key of the specified project.
+     *
+     * @param projectKey Key for project
+     * @param keyId      Id of ssh key
+     * @param permission Permission to grant, see {@link com.bol.cd.stash.model.RepositoryPermission}
+     * @param body       Empty map is fine, but a body is required by the HTTP standard
+     *                   even though the Stash docs does not describe it
+     */
+    @PUT
+    @Path("/rest/keys/1.0/projects/{projectKey}/ssh/{keyId}/permission/{permission}")
+    public ProjectAccessKey setProjectAccessKeyPermission(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("keyId") String keyId,
+            @PathParam("permission") String permission,
+            Map body
+    );
+
+    @POST
+    @Path("/rest/keys/1.0/projects/{projectKey}/repos/{repositorySlug}/ssh")
+    public RepositoryAccessKey addRepositoryAccessKey(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            RepositoryAccessKey accessKey
+    );
+
+    @GET
+    @Path("/rest/keys/1.0/projects/{projectKey}/repos/{repositorySlug}/ssh")
+    public Page<RepositoryAccessKey> getRepositoryAccessKeys(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug
+    );
+
+    @GET
+    @Path("/rest/keys/1.0/projects/{projectKey}/repos/{repositorySlug}/ssh/{keyId}")
+    public Page<RepositoryAccessKey> getRepositoryAccessKey(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("keyId") String keyId
+    );
+
+    @DELETE
+    @Path("/rest/keys/1.0/projects/{projectKey}/repos/{repositorySlug}/ssh/{keyId}")
+    public void deleteRepositoryAccessKey(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("keyId") String keyId
+    );
+
+    @GET
+    @Path("/rest/keys/1.0/ssh/{keyId}/repos")
+    public Page<RepositoryAccessKey> getAccessKeyRepositories(
+            @PathParam("keyId") String keyId
+    );
+
+    /**
+     * Updates the permission granted to the specified SSH key of the specified repository.
+     *
+     * @param projectKey     Key for project
+     * @param repositorySlug Slug of repository
+     * @param keyId          Id of ssh key
+     * @param permission     Permission to grant, see {@link com.bol.cd.stash.model.RepositoryPermission}
+     * @param body           Empty map is fine, but a body is required by the HTTP standard
+     *                       even though the Stash docs does not describe it
+     */
+    @PUT
+    @Path("/rest/keys/1.0/projects/{projectKey}/repos/{repositorySlug}/ssh/{keyId}/permission/{permission}")
+    public RepositoryAccessKey setRepositoryAccessKeyPermission(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("keyId") String keyId,
+            @PathParam("permission") String permission,
+            Map body
     );
 
     @GET
@@ -305,5 +419,30 @@ public interface StashApi {
             @PathParam("repositorySlug") String repositorySlug,
             @PathParam("hookKey") String hookKey,
             Map<String, String> settings
+    );
+
+    @GET
+    @Path("/rest/ssh/1.0/keys")
+    public Page<SshKey> getSshKeysForUser(
+            @QueryParam("user") String user
+    );
+
+    @POST
+    @Path("/rest/ssh/1.0/keys")
+    public SshKey addSshKeyForUser(
+            @QueryParam("user") String user,
+            SshKey key
+    );
+
+    @DELETE
+    @Path("/rest/ssh/1.0/keys")
+    public void deleteSshKeysForUser(
+            @QueryParam("user") String user
+    );
+
+    @DELETE
+    @Path("/rest/keys/1.0/ssh/{keyId}")
+    public void deleteSshKey(
+            @PathParam("keyId") String keyId
     );
 }
