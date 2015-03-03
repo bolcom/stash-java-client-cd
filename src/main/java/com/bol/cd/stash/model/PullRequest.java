@@ -1,6 +1,6 @@
 package com.bol.cd.stash.model;
 
-import com.bol.cd.stash.request.PullRequestState;
+import com.bol.cd.stash.model.PullRequestState;
 
 import java.io.Serializable;
 import java.util.Set;
