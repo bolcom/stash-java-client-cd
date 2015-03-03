@@ -4,10 +4,11 @@ import com.bol.cd.stash.model.*;
 import com.bol.cd.stash.model.ssh.ProjectAccessKey;
 import com.bol.cd.stash.model.ssh.RepositoryAccessKey;
 import com.bol.cd.stash.model.ssh.SshKey;
-import com.bol.cd.stash.request.*;
-import com.bol.cd.stash.request.PullRequestDirection;
-import com.bol.cd.stash.request.PullRequestSortOrder;
-import com.bol.cd.stash.request.PullRequestState;
+import com.bol.cd.stash.request.CreateBranch;
+import com.bol.cd.stash.request.DeleteBranch;
+import com.bol.cd.stash.model.PullRequestDirection;
+import com.bol.cd.stash.model.PullRequestSortOrder;
+import com.bol.cd.stash.model.PullRequestState;
 
 import javax.ws.rs.*;
 import java.util.Map;
