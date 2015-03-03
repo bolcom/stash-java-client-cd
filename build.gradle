@@ -55,6 +55,7 @@ jar {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
