@@ -66,9 +66,9 @@ public class Branch implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Branch{");
-        sb.append("isDefault=").append(isDefault);
-        sb.append('}');
-        return sb.toString();
+        return "Branch{" +
+                "displayId='" + displayId + '\'' +
+                ", latestChangeset='" + latestChangeset + '\'' +
+                '}';
     }
 }
