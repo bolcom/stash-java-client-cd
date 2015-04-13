@@ -64,6 +64,8 @@ dependencies {
     compile libraries.feign
     compile libraries.loggingApi
 
+    testCompile "com.bol.feign:feign-client-provider:0.3"
+
     testCompile libraries.commonsIo
     testCompile libraries.junit
     testCompile libraries.spock
