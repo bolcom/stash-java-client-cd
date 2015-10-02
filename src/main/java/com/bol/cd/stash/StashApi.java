@@ -6,9 +6,7 @@ import com.bol.cd.stash.model.ssh.RepositoryAccessKey;
 import com.bol.cd.stash.model.ssh.SshKey;
 import com.bol.cd.stash.request.CreateBranch;
 import com.bol.cd.stash.request.DeleteBranch;
-import com.bol.cd.stash.model.PullRequestDirection;
-import com.bol.cd.stash.model.PullRequestSortOrder;
-import com.bol.cd.stash.model.PullRequestState;
+import feign.Response;
 
 import javax.ws.rs.*;
 import java.util.Map;
@@ -138,6 +136,7 @@ public interface StashApi {
      * @param permission Permission to grant, see {@link com.bol.cd.stash.model.RepositoryPermission}
      * @param body       Empty map is fine, but a body is required by the HTTP standard
      *                   even though the Stash docs does not describe it
+     * @return returns the project access key
      */
     @PUT
     @Path("/rest/keys/1.0/projects/{projectKey}/ssh/{keyId}/permission/{permission}")
@@ -194,6 +193,7 @@ public interface StashApi {
      * @param permission     Permission to grant, see {@link com.bol.cd.stash.model.RepositoryPermission}
      * @param body           Empty map is fine, but a body is required by the HTTP standard
      *                       even though the Stash docs does not describe it
+     * @return returns the repository access key
      */
     @PUT
     @Path("/rest/keys/1.0/projects/{projectKey}/repos/{repositorySlug}/ssh/{keyId}/permission/{permission}")
@@ -445,5 +445,13 @@ public interface StashApi {
     @Path("/rest/keys/1.0/ssh/{keyId}")
     public void deleteSshKey(
             @PathParam("keyId") String keyId
+    );
+
+    @GET
+    @Path("/plugins/servlet/archive/projects/{projectKey}/repos/{repositorySlug}?at={ref}")
+    public Response getZipArchive(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("ref") String ref
     );
 }
