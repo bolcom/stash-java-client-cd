@@ -447,6 +447,14 @@ public interface StashApi {
             @PathParam("keyId") String keyId
     );
 
+    @POST
+    @Path("/rest/git/1.0/projects/{projectKey}/repos/{repositorySlug}/tags")
+    void tag(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            Tag tag
+    );
+
     @GET
     @Path("/plugins/servlet/archive/projects/{projectKey}/repos/{repositorySlug}?at={ref}")
     Response getZipArchive(
@@ -454,4 +462,6 @@ public interface StashApi {
             @PathParam("repositorySlug") String repositorySlug,
             @QueryParam("ref") String ref
     );
+
+
 }
