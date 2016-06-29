@@ -458,7 +458,7 @@ public interface StashApi {
 
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/commits")
-    Page<Commit> getPullRequests(
+    Page<Commit> getPullRequestCommits(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             @PathParam("pullRequestId") String pullRequestId
@@ -466,7 +466,7 @@ public interface StashApi {
 
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/commits")
-    Page<Commit> getPullRequests(
+    Page<Commit> getPullRequestCommits(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             @PathParam("pullRequestId") String pullRequestId,
