@@ -22,6 +22,13 @@ public interface StashApi {
     @Path("/rest/api/1.0/projects")
     Page<Project> getProjects();
 
+    @GET
+    @Path("/rest/api/1.0/projects")
+    Page<Project> getProjects(
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
+    );
+
     @POST
     @Path("/rest/api/1.0/projects")
     Project createProject(Project project);
@@ -109,6 +116,14 @@ public interface StashApi {
     );
 
     @GET
+    @Path("/rest/keys/1.0/projects/{projectKey}/ssh")
+    Page<ProjectAccessKey> getProjectAccessKeys(
+            @PathParam("projectKey") String projectKey,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
+    );
+
+    @GET
     @Path("/rest/keys/1.0/projects/{projectKey}/ssh/{keyId}")
     ProjectAccessKey getProjectAccessKey(
             @PathParam("projectKey") String projectKey,
@@ -126,6 +141,14 @@ public interface StashApi {
     @Path("/rest/keys/1.0/ssh/{keyId}/projects")
     Page<ProjectAccessKey> getAccessKeyProjects(
             @PathParam("keyId") String keyId
+    );
+
+    @GET
+    @Path("/rest/keys/1.0/ssh/{keyId}/projects")
+    Page<ProjectAccessKey> getAccessKeyProjects(
+            @PathParam("keyId") String keyId,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
     );
 
     /**
@@ -163,11 +186,30 @@ public interface StashApi {
     );
 
     @GET
+    @Path("/rest/keys/1.0/projects/{projectKey}/repos/{repositorySlug}/ssh")
+    Page<RepositoryAccessKey> getRepositoryAccessKeys(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
+    );
+
+    @GET
     @Path("/rest/keys/1.0/projects/{projectKey}/repos/{repositorySlug}/ssh/{keyId}")
     Page<RepositoryAccessKey> getRepositoryAccessKey(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             @PathParam("keyId") String keyId
+    );
+
+    @GET
+    @Path("/rest/keys/1.0/projects/{projectKey}/repos/{repositorySlug}/ssh/{keyId}")
+    Page<RepositoryAccessKey> getRepositoryAccessKey(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("keyId") String keyId,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
     );
 
     @DELETE
@@ -182,6 +224,14 @@ public interface StashApi {
     @Path("/rest/keys/1.0/ssh/{keyId}/repos")
     Page<RepositoryAccessKey> getAccessKeyRepositories(
             @PathParam("keyId") String keyId
+    );
+
+    @GET
+    @Path("/rest/keys/1.0/ssh/{keyId}/repos")
+    Page<RepositoryAccessKey> getAccessKeyRepositories(
+            @PathParam("keyId") String keyId,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
     );
 
     /**
@@ -209,6 +259,14 @@ public interface StashApi {
     @Path("/rest/api/1.0/projects/{projectKey}/repos")
     Page<Repository> getRepositories(
             @PathParam("projectKey") String projectKey
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos")
+    Page<Repository> getRepositories(
+            @PathParam("projectKey") String projectKey,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
     );
 
     @POST
@@ -294,6 +352,15 @@ public interface StashApi {
     );
 
     @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits")
+    Page<Commit> getCommits(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
+    );
+
+    @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits/{commitId}")
     Commit getCommit(
             @PathParam("projectKey") String projectKey,
@@ -311,10 +378,30 @@ public interface StashApi {
     );
 
     @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/compare/commits")
+    Page<ComparedChange> getComparedCommits(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("from") String from,
+            @QueryParam("to") String to,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
+    );
+
+    @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests")
     Page<PullRequest> getPullRequests(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests")
+    Page<PullRequest> getPullRequests(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
     );
 
     @GET
@@ -331,10 +418,34 @@ public interface StashApi {
     Page<PullRequest> getPullRequests(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("at") String atBranch,
+            @QueryParam("state") PullRequestState state,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests")
+    Page<PullRequest> getPullRequests(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
             @QueryParam("direction") PullRequestDirection direction,
             @QueryParam("at") String atBranch,
             @QueryParam("state") PullRequestState state,
             @QueryParam("order") PullRequestSortOrder order
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests")
+    Page<PullRequest> getPullRequests(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @QueryParam("direction") PullRequestDirection direction,
+            @QueryParam("at") String atBranch,
+            @QueryParam("state") PullRequestState state,
+            @QueryParam("order") PullRequestSortOrder order,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
     );
 
     @POST
@@ -343,6 +454,24 @@ public interface StashApi {
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             PullRequest pullRequest
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/commits")
+    Page<Commit> getPullRequests(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("pullRequestId") String pullRequestId
+    );
+
+    @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/commits")
+    Page<Commit> getPullRequests(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("pullRequestId") String pullRequestId,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
     );
 
     @GET
@@ -428,6 +557,14 @@ public interface StashApi {
             @QueryParam("user") String user
     );
 
+    @GET
+    @Path("/rest/ssh/1.0/keys")
+    Page<SshKey> getSshKeysForUser(
+            @QueryParam("user") String user,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
+    );
+
     @POST
     @Path("/rest/ssh/1.0/keys")
     SshKey addSshKeyForUser(
@@ -462,6 +599,4 @@ public interface StashApi {
             @PathParam("repositorySlug") String repositorySlug,
             @QueryParam("ref") String ref
     );
-
-
 }

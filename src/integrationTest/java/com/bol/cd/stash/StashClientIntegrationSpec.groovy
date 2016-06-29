@@ -1,6 +1,6 @@
 package com.bol.cd.stash
 
-import com.bol.feign.FeignClientProvider
+import feign.Feign
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 
@@ -22,10 +22,13 @@ class StashClientIntegrationSpec extends Specification {
     def stashPassword = System.getenv('STASH_PASSWORD')
 
     def "Just try stuff out"() {
-        def client = new FeignClientProvider(stashUrl)
-        client.withFakeSSL()
-        client.authenticated(stashUser, stashPassword)
-        def api = client.createClient()
+//        def api = Feign.builder()
+//            .target(StashApi, stashUrl)
+//        Feign.create(StashApi, stashUrl)
+//        def client = new FeignClientProvider(stashUrl)
+//        client.withFakeSSL()
+//        client.authenticated(stashUser, stashPassword)
+//        def api = client.createClient()
 
         expect:
         true

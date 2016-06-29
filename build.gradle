@@ -59,7 +59,7 @@ dependencies {
     compile libraries.feign
     compile libraries.loggingApi
 
-    testCompile "com.bol.feign:feign-client-provider:0.3"
+//    testCompile "com.bol.feign:feign-client-provider:1.2.0"
 
     testCompile libraries.commonsIo
     testCompile libraries.junit
