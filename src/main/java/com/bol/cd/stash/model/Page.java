@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Page<T> implements Serializable {
-    private static final long serialVersionUID = -5624783442511242212L;
+    private static final long serialVersionUID = 3845096183628438741L;
     private int size;
     private int limit;
-    private boolean lastPage;
-
+    private boolean isLastPage;
     private List<T> values;
+    private int start;
+    private int nextPageStart;
 
     public int getSize() {
         return size;
@@ -28,11 +29,15 @@ public class Page<T> implements Serializable {
     }
 
     public boolean isLastPage() {
-        return lastPage;
+        return isLastPage;
     }
 
-    public void setLastPage(boolean lastPage) {
-        this.lastPage = lastPage;
+    public boolean getIsLastPage() {
+        return isLastPage;
+    }
+
+    public void setIsLastPage(boolean lastPage) {
+        isLastPage = lastPage;
     }
 
     public List<T> getValues() {
@@ -43,27 +48,45 @@ public class Page<T> implements Serializable {
         this.values = values;
     }
 
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public int getNextPageStart() {
+        return nextPageStart;
+    }
+
+    public void setNextPageStart(int nextPageStart) {
+        this.nextPageStart = nextPageStart;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Page page = (Page) o;
+        Page<?> page = (Page<?>) o;
 
-        if (lastPage != page.lastPage) return false;
-        if (limit != page.limit) return false;
         if (size != page.size) return false;
-        if (values != null ? !values.equals(page.values) : page.values != null) return false;
-
-        return true;
+        if (limit != page.limit) return false;
+        if (isLastPage != page.isLastPage) return false;
+        if (start != page.start) return false;
+        if (nextPageStart != page.nextPageStart) return false;
+        return values != null ? values.equals(page.values) : page.values == null;
     }
 
     @Override
     public int hashCode() {
         int result = size;
         result = 31 * result + limit;
-        result = 31 * result + (lastPage ? 1 : 0);
+        result = 31 * result + (isLastPage ? 1 : 0);
         result = 31 * result + (values != null ? values.hashCode() : 0);
+        result = 31 * result + start;
+        result = 31 * result + nextPageStart;
         return result;
     }
 
@@ -72,8 +95,10 @@ public class Page<T> implements Serializable {
         final StringBuilder sb = new StringBuilder("Page{");
         sb.append("size=").append(size);
         sb.append(", limit=").append(limit);
-        sb.append(", lastPage=").append(lastPage);
+        sb.append(", lastPage=").append(isLastPage);
         sb.append(", values=").append(values);
+        sb.append(", start=").append(start);
+        sb.append(", nextPageStart=").append(nextPageStart);
         sb.append('}');
         return sb.toString();
     }

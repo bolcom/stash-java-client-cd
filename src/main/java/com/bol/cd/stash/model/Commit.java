@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Commit implements Serializable {
-    private static final long serialVersionUID = 6908773966876863960L;
+    private static final long serialVersionUID = -9133202310407897793L;
     private String id;
     private String displayId;
+    private User author;
+    private long authorTimestamp;
     private String message;
     private List<Commit> parents;
 
@@ -24,6 +26,22 @@ public class Commit implements Serializable {
 
     public void setDisplayId(String displayId) {
         this.displayId = displayId;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public long getAuthorTimestamp() {
+        return authorTimestamp;
+    }
+
+    public void setAuthorTimestamp(long authorTimestamp) {
+        this.authorTimestamp = authorTimestamp;
     }
 
     public String getMessage() {
@@ -49,16 +67,20 @@ public class Commit implements Serializable {
 
         Commit commit = (Commit) o;
 
+        if (authorTimestamp != commit.authorTimestamp) return false;
         if (id != null ? !id.equals(commit.id) : commit.id != null) return false;
+        if (displayId != null ? !displayId.equals(commit.displayId) : commit.displayId != null) return false;
+        if (author != null ? !author.equals(commit.author) : commit.author != null) return false;
         if (message != null ? !message.equals(commit.message) : commit.message != null) return false;
-        if (parents != null ? !parents.equals(commit.parents) : commit.parents != null) return false;
-
-        return true;
+        return parents != null ? parents.equals(commit.parents) : commit.parents == null;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (displayId != null ? displayId.hashCode() : 0);
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (int) (authorTimestamp ^ (authorTimestamp >>> 32));
         result = 31 * result + (message != null ? message.hashCode() : 0);
         result = 31 * result + (parents != null ? parents.hashCode() : 0);
         return result;
@@ -69,6 +91,8 @@ public class Commit implements Serializable {
         final StringBuilder sb = new StringBuilder("Commit{");
         sb.append("id='").append(id).append('\'');
         sb.append(", displayId='").append(displayId).append('\'');
+        sb.append(", author=").append(author);
+        sb.append(", authorTimestamp=").append(authorTimestamp);
         sb.append(", message='").append(message).append('\'');
         sb.append(", parents=").append(parents);
         sb.append('}');
