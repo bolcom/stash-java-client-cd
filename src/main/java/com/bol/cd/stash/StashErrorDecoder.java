@@ -17,7 +17,7 @@ public class StashErrorDecoder implements ErrorDecoder {
     final Decoder decoder;
     final ErrorDecoder defaultDecoder = new ErrorDecoder.Default();
 
-    StashErrorDecoder(Decoder decoder) {
+    public StashErrorDecoder(Decoder decoder) {
         this.decoder = decoder;
     }
 
