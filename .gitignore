@@ -5,5 +5,7 @@
 build/
 .idea
 *.iml
+*.iws
+*.ipr
 classes/
 bin/
