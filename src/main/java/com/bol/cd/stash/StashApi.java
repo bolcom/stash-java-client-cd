@@ -356,6 +356,18 @@ public interface StashApi {
     );
 
     @GET
+    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/files/{path}")
+    Page<String> files(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("path") String path,
+            @QueryParam("at") String at,
+            @QueryParam("limit") int limit,
+            @QueryParam("start") int start
+    );
+
+
+    @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits")
     Page<Commit> getCommits(
             @PathParam("projectKey") String projectKey,
