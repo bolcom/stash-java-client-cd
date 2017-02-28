@@ -363,15 +363,6 @@ public interface StashApi {
             @PathParam("path") String path,
             @QueryParam("at") String at
     );
-
-    @GET
-    @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path}?raw=true")
-    byte[] getFileBytes(
-            @PathParam("projectKey") String projectKey,
-            @PathParam("repositorySlug") String repositorySlug,
-            @PathParam("path") String path,
-            @QueryParam("at") String at
-    );
     
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/files/{path}")
