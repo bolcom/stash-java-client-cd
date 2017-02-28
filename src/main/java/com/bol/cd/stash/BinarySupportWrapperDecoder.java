@@ -17,20 +17,22 @@ public class BinarySupportWrapperDecoder implements Decoder {
     }
 
     @Override
-    // This implementation is largely copied from feign.codec.Decoder.Default, but now used as wrapper.
+    // This decoder implementation wraps another decoder and only triggers on the binary
+    // return types of byte[] and InputStream.
     public Object decode(Response response, Type type) throws IOException {
-        if (response.status() == 404) {
-            return Util.emptyValueOf(type);
-        }
-        if (response.body() == null) {
-            return null;
+        if (response.status() == 404 || response.body() == null) {
+            // Use the default behavior of the wrapped decoder.
+            return wrappedDecoder.decode(response, type);
         }
         if (InputStream.class.equals(type)) {
+            // Return the actual input stream.
             return response.body().asInputStream();
         }
         if (byte[].class.equals(type)) {
+            // Convert the input stream to a byte[].
             return Util.toByteArray(response.body().asInputStream());
         }
+        // All other cases: use the default behavior of the wrapped decoder.
         return wrappedDecoder.decode(response, type);
     }
     
