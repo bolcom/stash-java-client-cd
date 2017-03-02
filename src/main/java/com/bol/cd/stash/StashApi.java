@@ -6,9 +6,13 @@ import com.bol.cd.stash.model.ssh.RepositoryAccessKey;
 import com.bol.cd.stash.model.ssh.SshKey;
 import com.bol.cd.stash.request.CreateBranch;
 import com.bol.cd.stash.request.DeleteBranch;
+
+import feign.Feign;
 import feign.Response;
 
 import javax.ws.rs.*;
+
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -358,6 +362,29 @@ public interface StashApi {
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/browse/{path}?type=true")
     FileType getFileType(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("path") String path,
+            @QueryParam("at") String at
+    );
+
+    /*
+     * These 2 methods below are technically not part of the API, but they are very useful.
+     * If you want to use them, apply the BinarySupportWrapperDecoder in the Feign.Builder.
+     */
+    
+    @GET
+    @Path("/projects/{projectKey}/repos/{repositorySlug}/browse/{path}?raw=true")
+    InputStream getFileStream(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("path") String path,
+            @QueryParam("at") String at
+    );
+
+    @GET
+    @Path("/projects/{projectKey}/repos/{repositorySlug}/browse/{path}?raw=true")
+    byte[] getFileBytes(
             @PathParam("projectKey") String projectKey,
             @PathParam("repositorySlug") String repositorySlug,
             @PathParam("path") String path,
