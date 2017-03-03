@@ -1,19 +1,36 @@
 package com.bol.cd.stash;
 
-import com.bol.cd.stash.model.*;
+import java.util.Map;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+
+import com.bol.cd.stash.model.Branch;
+import com.bol.cd.stash.model.Commit;
+import com.bol.cd.stash.model.ComparedChange;
+import com.bol.cd.stash.model.FileType;
+import com.bol.cd.stash.model.LinesPage;
+import com.bol.cd.stash.model.Page;
+import com.bol.cd.stash.model.Project;
+import com.bol.cd.stash.model.PullRequest;
+import com.bol.cd.stash.model.PullRequestDirection;
+import com.bol.cd.stash.model.PullRequestSortOrder;
+import com.bol.cd.stash.model.PullRequestState;
+import com.bol.cd.stash.model.Repository;
+import com.bol.cd.stash.model.RepositoryHook;
+import com.bol.cd.stash.model.Tag;
 import com.bol.cd.stash.model.ssh.ProjectAccessKey;
 import com.bol.cd.stash.model.ssh.RepositoryAccessKey;
 import com.bol.cd.stash.model.ssh.SshKey;
 import com.bol.cd.stash.request.CreateBranch;
 import com.bol.cd.stash.request.DeleteBranch;
 
-import feign.Feign;
 import feign.Response;
-
-import javax.ws.rs.*;
-
-import java.io.InputStream;
-import java.util.Map;
 
 /**
  * https://developer.atlassian.com/static/rest/stash/3.5.1/stash-branch-utils-rest.html
@@ -368,29 +385,6 @@ public interface StashApi {
             @QueryParam("at") String at
     );
 
-    /*
-     * These 2 methods below are technically not part of the API, but they are very useful.
-     * If you want to use them, apply the BinarySupportWrapperDecoder in the Feign.Builder.
-     */
-    
-    @GET
-    @Path("/projects/{projectKey}/repos/{repositorySlug}/browse/{path}?raw=true")
-    InputStream getFileStream(
-            @PathParam("projectKey") String projectKey,
-            @PathParam("repositorySlug") String repositorySlug,
-            @PathParam("path") String path,
-            @QueryParam("at") String at
-    );
-
-    @GET
-    @Path("/projects/{projectKey}/repos/{repositorySlug}/browse/{path}?raw=true")
-    byte[] getFileBytes(
-            @PathParam("projectKey") String projectKey,
-            @PathParam("repositorySlug") String repositorySlug,
-            @PathParam("path") String path,
-            @QueryParam("at") String at
-    );
-    
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/files/{path}")
     Page<String> files(
@@ -401,7 +395,6 @@ public interface StashApi {
             @QueryParam("limit") int limit,
             @QueryParam("start") int start
     );
-
 
     @GET
     @Path("/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/commits")
@@ -658,4 +651,14 @@ public interface StashApi {
             @PathParam("repositorySlug") String repositorySlug,
             @QueryParam("ref") String ref
     );
+
+    @GET
+    @Path("/projects/{projectKey}/repos/{repositorySlug}/browse/{path}?raw=true")
+    Response getFile(
+            @PathParam("projectKey") String projectKey,
+            @PathParam("repositorySlug") String repositorySlug,
+            @PathParam("path") String path,
+            @QueryParam("at") String at
+    );
+
 }
